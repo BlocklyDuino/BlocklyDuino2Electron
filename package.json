@@ -1,0 +1,71 @@
+{
+   "name": "BlocklyDuino",
+   "version": "2.0.0",
+   "keywords": [
+      "blockly",
+      "blocklyduinoreboot",
+      "arduino",
+      "blocks",
+      "scratch"
+   ],
+   "author": "Sebastien Canet <scanet@libreduc.cc>",
+   "contributors": [],
+   "scripts": {
+      "postinstall": "electron-builder install-app-deps",
+      "start": "electron .",
+      "compile": "electron-builder --win --ia32",
+      "publish": "electron-builder --win --ia32 -p always"
+   },
+   "description": "BlocklyDuino is a web-based visual programming editor for [Arduino](http://www.arduino.cc/)",
+   "main": "main.js",
+   "license": "ISC",
+   "build": {
+      "appId": "com.electron.blocklyduino",
+      "asar": false,
+      "directories": {
+         "buildResources": "./src",
+         "output": "./dist"
+      },
+      "fileAssociations": {
+         "ext": "bduino",
+         "name": "BLOCK File",
+         "role": "Editor",
+         "icon": "src/file.ico"
+      },
+      "extraFiles": [
+         "./public/",
+         "./arduino",
+         "README.md"
+      ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+      "win": {
+         "target": [
+            "portable",
+            "zip"
+         ],
+         "icon": "src/app.ico"
+      },
+      "publish": [
+         {
+            "provider": "github",
+            "repo": "BlocklyDuino-v2",
+            "owner": "SebCanet",
+            "releaseType": "release"
+         }
+      ]
+   },
+   "dependencies": {
+      "child_process": "1.0.2",
+      "serialport": "8.0.7"
+   },
+   "devDependencies": {
+      "electron": "^8.0.1",
+      "electron-packager": "^14.2.1",
+      "electron-builder": "^22.3.2"
+   }
+}
