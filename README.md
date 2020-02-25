@@ -1,5 +1,5 @@
 
-# <img src="https://raw.githubusercontent.com/BlocklyDuino/BlocklyDuinoElectron/master/src/app.png" alt="BlockyDuino icon"> BlocklyDuinoElectron
+# <img src="https://raw.githubusercontent.com/BlocklyDuino/BlocklyDuinoElectron/master/src/app.png" alt="BlockyDuino icon"> BlocklyDuino2Electron
 
 Electron version of BlocklyDuino2, autonomous client, multi OS with uploading integrated, this graphical environment is free and open source graphic language.
 Programs are created by assembling blocks, thanks to drag'n'drop, then they are then compiled and uploaded in the board board.
