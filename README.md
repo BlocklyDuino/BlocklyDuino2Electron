@@ -40,6 +40,12 @@ run as Administrator
 > electron .
 ```
 
+### Build
+
+```bash
+> npx electron-builder
+```
+
 ## Links
 
 Tools without which nothing would not have been possible :
