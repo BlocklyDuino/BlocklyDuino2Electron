@@ -28,9 +28,15 @@ Clone or [download the source code](https://github.com/BlocklyDuino/BlocklyDuino
 
 You'll need [Node.js](https://nodejs.org) installed on your computer.
 
-Install all required tools :
+Install all required tools (as Administrator or sudo):
 
-run as Administrator
+ - tools for compiling on Windows
+
+``` bash
+> npm inistratorall -g windows-build-tools
+```
+
+ - addon build tool
 
 ``` bash
 > npm install -g node-gyp
