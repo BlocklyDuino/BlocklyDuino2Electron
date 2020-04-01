@@ -33,7 +33,7 @@ Install all required tools (as Administrator or sudo):
  - tools for compiling on Windows
 
 ``` bash
-> npm inistratorall -g windows-build-tools
+> npm install -g windows-build-tools
 ```
 
  - addon build tool
