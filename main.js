@@ -1,72 +1,114 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// Modules to control application life and create native browser window
+const {
+    app,
+    BrowserWindow,
+    electron,
+    ipcMain,
+    globalShortcut,
+	Tray
+} = require('electron');
 
-const electron = require('electron')
-const { ipcMain, app, globalShortcut } = require('electron')
-const BrowserWindow = electron.BrowserWindow
-var path = require('path')
+let BlocklyWindow = null;
+let SerialWindow = null;
+let FactoryWindow = null;
+let devtools = null;
+let tray = null;
 
-let mainWindow
+function createBlocklyWindow() {
+    BlocklyWindow = new BrowserWindow({
+            width: 1510,
+            height: 700,
+            webPreferences: {
+                nodeIntegration: true
+            },
+			icon: __dirname + '/src/icon.ico'
+        });
+    if (process.platform == 'win32' && process.argv.length >= 2) {
+        BlocklyWindow.loadFile('./www/index.html?url=' + process.argv[1]);
+    } else {
+        BlocklyWindow.loadFile('./www/index.html');
+    };
+    BlocklyWindow.loadFile('./www/index.html');
+    BlocklyWindow.setMenu(null);
+    BlocklyWindow.on('closed', function () {
+        BlocklyWindow = null;
+    });
+};
 
-function createWindow () {
-  mainWindow = new BrowserWindow({
-	  name: 'BlocklyDuino',
-	  icon: './src/app.png',
-	  width: 1400,
-	  height: 768})
-  mainWindow.setMenu(null);
-  mainWindow.loadURL(path.join(__dirname, './www/index.html'));
-  // mainWindow.webContents.openDevTools({detach:true});
-  mainWindow.on('closed', function () {
-    mainWindow = null;
-  })
-}
-function createTerm() {
-	termWindow = new BrowserWindow({width: 640, height: 560, 'parent': mainWindow, resizable: false, movable: true, modal: true}) 
-	termWindow.loadURL(path.join(__dirname, './www/term.html'));
-	termWindow.setMenu(null)
-	termWindow.on('closed', function () { 
-		termWindow = null 
-	})
-}
-function open_console(mainWindow = BrowserWindow.getFocusedWindow()) {
-	if (mainWindow) mainWindow.webContents.toggleDevTools()
-}
-function refresh(mainWindow = BrowserWindow.getFocusedWindow()) {
-	mainWindow.webContents.reloadIgnoringCache()
-}
+function createSerialWindow() {
+    SerialWindow = new BrowserWindow({
+            width: 640,
+            height: 530,
+            'parent': BlocklyWindow,
+            resizable: false,
+            movable: true,
+            frame: true,
+            modal: false,
+			icon: __dirname + './src/icon.ico'
+        });
+    SerialWindow.loadFile('./www/blocklyduino/serialMonitor.html');
+    SerialWindow.setMenu(null);
+    SerialWindow.on('closed', function () {
+        SerialWindow = null;
+    });
+};
 
-app.on('ready',  function () {
-	createWindow()
-	globalShortcut.register('F8', open_console)
-	globalShortcut.register('F5', refresh)
-})
+function createFactoryWindow() {
+    FactoryWindow = new BrowserWindow({
+            width: 1066,
+            height: 640,
+            'parent': BlocklyWindow,
+            resizable: true,
+            movable: true,
+            frame: false,
+            modal: false
+        });
+    FactoryWindow.loadFile('./www/blocksfactory/blocksfactory.html');
+    FactoryWindow.setMenu(null);
+    FactoryWindow.on('closed', function () {
+        FactoryWindow = null;
+    });
+};
 
-app.on('window-all-closed', function () {
-	globalShortcut.unregisterAll()
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-})
+function openDevTools(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
+    if (BlocklyWindow) {
+        BlocklyWindow.webContents.toggleDevTools();
+    };
+};
+
+function refresh(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
+    BlocklyWindow.webContents.reloadIgnoringCache();
+};
+
+app.on('ready', () => {
+    createBlocklyWindow();
+    globalShortcut.register('F12', openDevTools);
+    globalShortcut.register('F5', refresh);
+    // devtools = new BrowserWindow();
+    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // BlocklyWindow.webContents.openDevTools({
+       // mode: 'detach'
+    // });
+	tray = new Tray('./www/blocklyduino/media/logo_only.png');
+	tray.setToolTip('BlocklyDuino')
+});
 
 app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+    if (BlocklyWindow === null)
+        createBlocklyWindow();
+});
 
-ipcMain.on("prompt", function () {
-	createTerm()  
-})
-module.exports.open_console = open_console
-module.exports.refresh = refresh
-// const Tray = electron.Tray;
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin')
+        app.quit();
+});
 
-// function createWindow () {
+ipcMain.on("serialConnect", function () {
+    createSerialWindow();
+});
+ipcMain.on("factory", function () {
+    createFactoryWindow();
+});
 
-    // const tray = new Tray('file://${__dirname}/www/images/iconApp.png');
-    // tray.setToolTip('Studio4Education');
-// }
+module.exports.openDevTools = openDevTools;
+module.exports.refresh = refresh;

@@ -1,0 +1,14 @@
+board_manager:
+  additional_urls:
+    - https://arduino.esp8266.com/stable/package_esp8266com_index.json
+    - https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+daemon:
+  port: "50051"
+directories:
+  data: ./
+  downloads: ../tmp
+  user: ../
+logging:
+  file: ""
+  format: text
+  level: info

@@ -1,71 +1,79 @@
 {
-   "name": "BlocklyDuino",
-   "version": "2.0.0",
-   "keywords": [
-      "blockly",
-      "blocklyduinoreboot",
-      "arduino",
-      "blocks",
-      "scratch"
-   ],
-   "author": "Sebastien Canet <scanet@libreduc.cc>",
-   "contributors": [],
-   "scripts": {
-      "postinstall": "electron-builder install-app-deps",
-      "start": "electron .",
-      "compile": "electron-builder --win --ia32",
-      "publish": "electron-builder --win --ia32 -p always"
-   },
-   "description": "BlocklyDuino is a web-based visual programming editor for [Arduino](http://www.arduino.cc/)",
-   "main": "main.js",
-   "license": "ISC",
-   "build": {
-      "appId": "com.electron.blocklyduino",
-      "asar": false,
-      "directories": {
-         "buildResources": "./src",
-         "output": "./dist"
-      },
-      "fileAssociations": {
-         "ext": "bduino",
-         "name": "BLOCK File",
-         "role": "Editor",
-         "icon": "src/file.ico"
-      },
-      "extraFiles": [
-         "./public/",
-         "./arduino",
-         "README.md"
-      ],
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
+    "name": "BlocklyDuino",
+    "version": "0.2.0",
+    "description": "BlocklyDuino is a web-based visual programming editor for [Arduino](http://www.arduino.cc/)",
+    "license": "GPL-3.0",
+    "author": "Sebastien Canet <scanet@libreduc.cc>",
+    "main": "main.js",
+    "keywords": [
+        "blockly",
+        "blocklyduinoreboot",
+        "blocklyduino2",
+        "BlocklyDuinoElectron",
+        "BlocklyDuino2Electron",
+        "arduino",
+        "blocks",
+        "scratch"
+    ],
+    "build": {
+        "asar": true,
+        "appId": "com.electron.BlocklyDuino2",
+        "directories": {
+            "buildResources": "./src",
+            "output": "./dist"
+        },
+        "win": {
+            "target": [
+                "nsis",
+                "portable",
+                "zip"
+            ],
+            "icon": "src/appIcon.png"
+        },
+        "nsis": {
+            "installerIcon": "src/install.ico",
+            "uninstallerIcon": "src/icon.ico",
+            "oneClick": false,
+            "perMachine": true,
+            "deleteAppDataOnUninstall": true,
+            "allowToChangeInstallationDirectory": true,
+            "runAfterFinish": true
+        },
+        "fileAssociations": {
+            "ext": "bduino",
+            "name": "BLOCKLY File",
+            "role": "Editor",
+            "icon": "src/icon.ico"
+        },
+        "publish": [
+            {
+                "provider": "github",
+                "repo": "BlocklyDuino/BlocklyDuino2Electron",
+                "owner": "SebCanet",
+                "releaseType": "release"
+            }
+        ]
     },
-      "win": {
-         "target": [
-            "portable",
-            "zip"
-         ],
-         "icon": "src/app.ico"
-      },
-      "publish": [
-         {
-            "provider": "github",
-            "repo": "BlocklyDuino-v2",
-            "owner": "SebCanet",
-            "releaseType": "release"
-         }
-      ]
-   },
-   "dependencies": {
-      "child_process": "1.0.2",
-      "serialport": "8.0.7"
-   },
-   "devDependencies": {
-      "electron": "^8.0.1",
-      "electron-packager": "^14.2.1",
-      "electron-builder": "^22.3.2"
-   }
+    "scripts": {
+        "start": "electron .",
+        "prepare": "electron-build-env npm rebuild"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BlocklyDuino/BlocklyDuino2Electron"
+    },
+    "bugs": {
+        "url": "https://github.com/BlocklyDuino/BlocklyDuinoElectron/issues"
+    },
+    "devDependencies": {
+        "electron": "^8.2.0",
+        "electron-builder": "^22.4.1"
+    },
+    "dependencies": {
+        "child_process": "^1.0.2",
+        "electron-build-env": "^0.2.0",
+        "electron-updater": "^4.2.5",
+        "fs-extra": "^9.0.0",
+        "serialport": "^8.0.7"
+    }
 }
