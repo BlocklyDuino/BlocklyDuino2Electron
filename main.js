@@ -53,11 +53,11 @@ function createSerialWindow() {
     SerialWindow.on('closed', function () {
         SerialWindow = null;
     });
-    devtools = new BrowserWindow();
-    SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    SerialWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
+    // devtools = new BrowserWindow();
+    // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // SerialWindow.webContents.openDevTools({
+        // mode: 'detach'
+    // });
 }
 ;
 
