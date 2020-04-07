@@ -59,16 +59,17 @@ window.addEventListener('load', function load(event) {
         var boardSelected = document.getElementById('boardMenu').value;
         if (boardSelected !== "none" && boardSelected !== "" && boardSelected !== "undefined") {
             document.getElementById('content_serial').style.color = '#FFFFFF';
-            document.getElementById('content_serial').innerHTML = 'Carte ' + profile.default['description'];
+            document.getElementById('content_serial').innerHTML = MSG['IDE_upload1'] + profile.default['description'];
+            var upload_arg = profile.default['upload_arg'];
         } else {
             document.getElementById('content_serial').style.color = '#FF0000';
             document.getElementById('content_serial').innerHTML = MSG['IDE_select_board'];
             return;
         }
-        if (document.getElementById('detailedCompilation').prop('checked'))
-            var cmd = 'arduino-cli.exe --debug compile --fqbn ' + upload_arg + ' ' + file_path;
+        if (document.getElementById('detailedCompilation').checked === true)
+            var cmd = 'arduino-cli.exe compile -v -b ' + upload_arg + ' ' + file_path;
         else
-            var cmd = 'arduino-cli.exe compile --fqbn ' + upload_arg + ' ' + file_path;
+            var cmd = 'arduino-cli.exe compile -b ' + upload_arg + ' ' + file_path;
         
         fs.writeFile(file, data, (err) => {
             if (err)
@@ -102,16 +103,15 @@ window.addEventListener('load', function load(event) {
                 return;
             } else {
                 document.getElementById('content_serial').style.color = '#FFFFFF';
-                document.getElementById('content_serial').innerHTML = MSG['IDE_upload1'] + profile.default['description'] + MSG['IDE_upload2'] + com;
-                document.getElementById('content_serial').innerHTML += MSG['IDE_upload3'];
+                document.getElementById('content_serial').innerHTML = MSG['IDE_upload1'] + profile.default['description'] + MSG['IDE_upload2'] + comPortSelected;
+                document.getElementById('content_serial').innerHTML += '\n' + MSG['IDE_upload3'];
                 var upload_arg = profile.default['upload_arg'];
             }
         }
-        if (document.getElementById('detailedCompilation').prop('checked'))
-            var cmd = 'arduino-cli.exe --debug upload -p ' + comPortSelected + ' --fqbn ' + upload_arg + ' ' + file_path;
+        if (document.getElementById('detailedCompilation').checked === true)
+            var cmd = 'arduino-cli.exe upload -v -p ' + comPortSelected + ' -b ' + upload_arg + ' ' + file_path;
         else
-            var cmd = 'arduino-cli.exe upload -p ' + comPortSelected + ' --fqbn ' + upload_arg + ' ' + file_path;
-        console.log(cmd);
+            var cmd = 'arduino-cli.exe upload -p ' + comPortSelected + ' -b ' + upload_arg + ' ' + file_path;
         exec(cmd, {
             cwd: './arduino'
         }, (error, stdout, stderr) => {

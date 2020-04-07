@@ -96,11 +96,11 @@ app.on('ready', () => {
     createBlocklyWindow();
     globalShortcut.register('F12', openDevTools);
     globalShortcut.register('F5', refresh);
-    // devtools = new BrowserWindow();
-    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    // BlocklyWindow.webContents.openDevTools({
-        // mode: 'detach'
-    // });
+    devtools = new BrowserWindow();
+    BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    BlocklyWindow.webContents.openDevTools({
+        mode: 'detach'
+    });
     tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('BlocklyDuino');
 });
