@@ -35,10 +35,10 @@ window.addEventListener('load', function load(event) {
             localStorage.setItem("comPort", comPortSelected);
             ipcRenderer.send("serialConnect", "");
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
-            document.getElementById('content_hoverButton').innerHTML = 'Connexion au port ' + comPortSelected;
+            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_connect'] + comPortSelected;
         } else {
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
-            document.getElementById('content_hoverButton').innerHTML = 'Sélectionner un port COM !!!';
+            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_select_port'];
             return
         }
     });
@@ -62,10 +62,10 @@ window.addEventListener('load', function load(event) {
             document.getElementById('content_serial').innerHTML = 'Carte ' + profile.default['description'];
         } else {
             document.getElementById('content_serial').style.color = '#FF0000';
-            document.getElementById('content_serial').innerHTML = 'Sélectionner une carte !';
+            document.getElementById('content_serial').innerHTML = MSG['IDE_select_board'];
             return;
         }
-        if ($('#detailedCompilation').prop('checked'))
+        if (document.getElementById('detailedCompilation').prop('checked'))
             var cmd = 'arduino-cli.exe --debug compile --fqbn ' + upload_arg + ' ' + file_path;
         else
             var cmd = 'arduino-cli.exe compile --fqbn ' + upload_arg + ' ' + file_path;
@@ -74,7 +74,7 @@ window.addEventListener('load', function load(event) {
             if (err)
                 return console.log(err);
         });
-        document.getElementById('content_serial').innerHTML += '\nVérification : en cours...\n<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>';
+        document.getElementById('content_serial').innerHTML += MSG['IDE_verif_progress'];
         exec(cmd, {
             cwd: './arduino'
         }, (error, stdout, stderr) => {
@@ -84,7 +84,7 @@ window.addEventListener('load', function load(event) {
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
-            document.getElementById('content_serial').innerHTML = stdout + '\nVérification : OK';
+            document.getElementById('content_serial').innerHTML = stdout + MSG['IDE_verif_ok'];
         });
     };
     document.getElementById('uploadButton').onclick = function (event) {
@@ -93,16 +93,17 @@ window.addEventListener('load', function load(event) {
         var comPortSelected = document.getElementById('serialMenu').value;
         if (boardSelected === "none") {
             document.getElementById('content_serial').style.color = '#FF0000';
-            document.getElementById('content_serial').innerHTML = 'Sélectionner une carte !';
+            document.getElementById('content_serial').innerHTML = MSG['IDE_select_board'];
             return;
         } else {
             if (comPortSelected === "none") {
                 document.getElementById('content_serial').style.color = '#FF0000';
-                document.getElementById('content_serial').innerHTML = 'Sélectionner un port !';
+                document.getElementById('content_serial').innerHTML = MSG['IDE_select_port'];
                 return;
             } else {
                 document.getElementById('content_serial').style.color = '#FFFFFF';
-                document.getElementById('content_serial').innerHTML = 'Carte ' + profile.default['description'] + ' sur port ' + com;
+                document.getElementById('content_serial').innerHTML = MSG['IDE_upload1'] + profile.default['description'] + MSG['IDE_upload2'] + com;
+                document.getElementById('content_serial').innerHTML += MSG['IDE_upload3'];
                 var upload_arg = profile.default['upload_arg'];
             }
         }
@@ -110,8 +111,6 @@ window.addEventListener('load', function load(event) {
             var cmd = 'arduino-cli.exe --debug upload -p ' + comPortSelected + ' --fqbn ' + upload_arg + ' ' + file_path;
         else
             var cmd = 'arduino-cli.exe upload -p ' + comPortSelected + ' --fqbn ' + upload_arg + ' ' + file_path;
-        document.getElementById('content_serial').innerHTML = 'Carte ' + profile.default['description'] + ' sur port ' + com;
-        document.getElementById('content_serial').innerHTML += '\nTéléversement : en cours...\n<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>';
         console.log(cmd);
         exec(cmd, {
             cwd: './arduino'
@@ -122,7 +121,7 @@ window.addEventListener('load', function load(event) {
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
-            document.getElementById('content_serial').innerHTML = stdout + '\nTéléversement : OK';
+            document.getElementById('content_serial').innerHTML = stdout + MSG['IDE_upload_ok'];
             const path = require('path');
             fs.readdir('.\\arduino\\tmp', (err, files) => {
                 if (err)
