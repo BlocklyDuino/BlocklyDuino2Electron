@@ -23,7 +23,7 @@ function createBlocklyWindow() {
         },
         icon: __dirname + '/src/icon.ico'
     });
-    if (process.platform == 'win32' && process.argv.length >= 2) {
+    if (process.platform === 'win32' && process.argv.length >= 2) {
         BlocklyWindow.loadFile('./www/index.html?url=' + process.argv[1]);
     } else {
         BlocklyWindow.loadFile('./www/index.html');
@@ -42,10 +42,10 @@ function createSerialWindow() {
         width: 640,
         height: 530,
         'parent': BlocklyWindow,
+        webPreferences: {
+            nodeIntegration: true
+        },
         resizable: false,
-        movable: true,
-        frame: true,
-        modal: false,
         icon: __dirname + './src/icon.ico'
     });
     SerialWindow.loadFile('./www/blocklyduino/serialMonitor.html');
@@ -53,11 +53,11 @@ function createSerialWindow() {
     SerialWindow.on('closed', function () {
         SerialWindow = null;
     });
-    // devtools = new BrowserWindow();
-    // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    // SerialWindow.webContents.openDevTools({
-        // mode: 'detach'
-    // });
+    devtools = new BrowserWindow();
+    SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    SerialWindow.webContents.openDevTools({
+        mode: 'detach'
+    });
 }
 ;
 
@@ -82,8 +82,7 @@ function createFactoryWindow() {
 function openDevTools(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
     if (BlocklyWindow) {
         BlocklyWindow.webContents.toggleDevTools();
-    }
-    ;
+}
 }
 ;
 

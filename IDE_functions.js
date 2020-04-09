@@ -5,12 +5,9 @@
  ** verifyButton: verify and compile in hex file
  ** uploadButton: upload hex file in Arduino board
  */
-const {
-    ipcRenderer
-} = require('electron');
-const {
-    exec
-} = require('child_process');
+
+        const {ipcRenderer} = require('electron');
+const {exec} = require('child_process');
 const fs = require('fs-extra');
 const SerialPort = require('serialport');
 
@@ -31,7 +28,7 @@ serialPortsMenu.addEventListener("mouseover", function (event) {
 window.addEventListener('load', function load(event) {
     document.getElementById('serialConnectButton').addEventListener('click', function () {
         var comPortSelected = document.getElementById('serialMenu').value;
-        if (comPortSelected != "none" && comPortSelected != "" && comPortSelected != "undefined") {
+        if (comPortSelected !== "none" && comPortSelected !== "" && comPortSelected !== "undefined") {
             localStorage.setItem("comPort", comPortSelected);
             ipcRenderer.send("serialConnect", "");
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
@@ -39,14 +36,14 @@ window.addEventListener('load', function load(event) {
         } else {
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
             document.getElementById('content_hoverButton').innerHTML = MSG['IDE_select_port'];
-            return
+            return;
         }
     });
     document.getElementById('verifyButton').onclick = function (event) {
         try {
-            fs.accessSync('.\\arduino\\tmp', fs.constants.W_OK);
+            fs.accessSync('.\\compiler\\tmp', fs.constants.W_OK);
         } catch (err) {
-            fs.mkdirSync('.\\arduino\\tmp', {
+            fs.mkdirSync('.\\compiler\\tmp', {
                 recursive: false
             }, (err) => {
                 if (err)
@@ -54,7 +51,7 @@ window.addEventListener('load', function load(event) {
             });
         }
         var file_path = '.\\tmp';
-        var file = '.\\arduino\\tmp\\tmp.ino';
+        var file = '.\\compiler\\tmp\\tmp.ino';
         var data = document.getElementById('content_code').innerText;
         var boardSelected = document.getElementById('boardMenu').value;
         if (boardSelected !== "none" && boardSelected !== "" && boardSelected !== "undefined") {
@@ -70,7 +67,7 @@ window.addEventListener('load', function load(event) {
             var cmd = 'arduino-cli.exe compile -v -b ' + upload_arg + ' ' + file_path;
         else
             var cmd = 'arduino-cli.exe compile -b ' + upload_arg + ' ' + file_path;
-        
+
         fs.writeFile(file, data, (err) => {
             if (err)
                 return console.log(err);
@@ -123,11 +120,11 @@ window.addEventListener('load', function load(event) {
             document.getElementById('content_serial').style.color = '#00FF00';
             document.getElementById('content_serial').innerHTML = stdout + MSG['IDE_upload_ok'];
             const path = require('path');
-            fs.readdir('.\\arduino\\tmp', (err, files) => {
+            fs.readdir('.\\compiler\\tmp', (err, files) => {
                 if (err)
                     throw err;
                 for (const file of files) {
-                    fs.unlink(path.join('.\\arduino\\tmp', file), err => {
+                    fs.unlink(path.join('.\\compiler\\tmp', file), err => {
                         if (err)
                             throw err;
                     });
