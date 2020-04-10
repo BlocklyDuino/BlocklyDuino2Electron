@@ -1,5 +1,5 @@
 var {ipcRenderer} = require("electron");
-var remote = require('electron').remote;
+var {dialog } = require("electron").remote;
 var fs = require('fs-extra');
 
 window.addEventListener('load', function load(event) {
@@ -9,63 +9,68 @@ window.addEventListener('load', function load(event) {
         document.getElementById('serialPeek').textContent = '';
     };
     document.getElementById('btn_serialSend').onclick = function () {
-        var entree = document.getElementById('serialSendBox').value;
+        var input = document.getElementById('serialSendBox').value;
         if (SerialPortToMonitor.isOpen) {
-            document.getElementById('serialPeek').innerHTML += entree + "<br>";
-            SerialPortToMonitor.write(entree);
+            document.getElementById('serialPeek').innerHTML += input + "<br>";
+            SerialPortToMonitor.write(input);
         }
     };
-    document.getElementById('btn_serialConnect').onclick = function (event) {
-        var SerialPort = require('serialport');
-        var Readline = require('@serialport/parser-readline');
-        var moniteur = document.getElementById('serialPeek');
+    document.getElementById('btn_serialConnect').onclick = function () {
+        const SerialPort = require('serialport');
+        const Readline = require('@serialport/parser-readline');
         var baud = parseInt(document.getElementById('serialConnectSpeed_Menu').value);
         var comPortToUse = localStorage.getItem("comPort");
-        SerialPortToMonitor = new SerialPort(comPortToUse, {
-            baudRate: baud,
-            autoOpen: false
-        });
-        var parser = SerialPortToMonitor.pipe(new Readline({
-            delimiter: '\n'
-        }));
         if (connexion) {
-            document.getElementById('btn_serialConnect').innerHTML = "<span class='fa fa-play'> Démarrer</span>";
+            document.getElementById('btn_serialConnect').innerHTML = "<span class='fa fa-play'></span> Démarrer";
             document.getElementById('btn_serialSend').disabled = true;
             SerialPortToMonitor.close(function (err) {
-                moniteur.innerHTML += 'arrêt<br>';
+                document.getElementById('serialPeek').innerHTML += 'arrêt<br>';
             });
             connexion = false;
         } else {
+            SerialPortToMonitor = new SerialPort(comPortToUse, {
+                    baudRate: baud
+                });
+            const parser = new Readline({
+                    delimiter: '\n'
+                });
+            SerialPortToMonitor.pipe(parser);
             document.getElementById('btn_serialConnect').innerHTML = "<span class='fa fa-pause'></span> Arrêter";
             document.getElementById('btn_serialSend').disabled = false;
             SerialPortToMonitor.on('open', function () {
-                moniteur.innerHTML += 'démarrage de la communication<br>';
+                document.getElementById('serialPeek').innerHTML += 'démarrage de la communication<br>';
+                parser.on('data', function (data) {
+                    document.getElementById('serialPeek').innerHTML += data + "<br>";
+                    document.getElementById('serialPeek').scrollTop = document.getElementById('serialPeek').scrollHeight;
+                    document.getElementById('serialPeek').animate({
+                        scrollTop: document.getElementById('serialPeek').scrollHeight
+                    });
+                });
             });
             connexion = true;
-            SerialPortToMonitor.on('data', function (data) {
-                if (connexion) {
-                    moniteur.innerHTML += data + "<br>";
-                    moniteur.scrollTop = moniteur.scrollHeight;
-                    moniteur.animate({
-                        scrollTop: moniteur.scrollHeight
-                    });
+        }
+    };
+    document.getElementById('btn_serialPeekCSV').onclick = function () {
+        dialog.showSaveDialog(window, {
+            title: 'Exporter les données au format CSV',
+            defaultPath: 'Programme',
+            filters: [{
+                    name: 'donnees',
+                    extensions: ['csv']
                 }
-            });
-        }
+            ]
+        },
+            function (result) {
+            var code = document.getElementById('fenetre_term').innerHTML
+                code = code.split('<br>').join('\n')
+                if (result === null) {
+                    return
+                } else {
+                    fs.writeFile(result, code, function (err) {
+                        if (err)
+                            return console.log(err)
+                    })
+                }
+        })
     };
-    document.getElementById('btn_serialPeekCSV').onclick = function (event) {
-        ipcRenderer.send('save-csv');
-    };
-    ipcRenderer.on('saved-csv', function (event, path) {
-        var code = document.getElementById('serialPeek').innerHTML;
-        code = code.split('<br>').join('\n');
-        if (path === null) {
-            return;
-        } else {
-            fs.writeFile(path, code, function (err) {
-                if (err)
-                    return console.log(err);
-            });
-        }
-    });
 });

@@ -10,7 +10,7 @@ window.addEventListener('load', function load(event) {
         document.getElementById('content_serial').innerHTML = MSG['coreUpdateButton_msg'];
         var cmd = 'arduino-cli.exe core update-index';
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -43,7 +43,7 @@ window.addEventListener('load', function load(event) {
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['listBoardsButton_msg'];
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -60,7 +60,7 @@ window.addEventListener('load', function load(event) {
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['installBoardsButton_msg'];
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -77,7 +77,7 @@ window.addEventListener('load', function load(event) {
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['searchlLibButton_msg'];
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -94,7 +94,7 @@ window.addEventListener('load', function load(event) {
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['installLibButton_msg'];
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';

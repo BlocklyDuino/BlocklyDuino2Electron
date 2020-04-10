@@ -6,7 +6,7 @@
  ** uploadButton: upload hex file in Arduino board
  */
 
-        const {ipcRenderer} = require('electron');
+const {ipcRenderer} = require('electron');
 const {exec} = require('child_process');
 const fs = require('fs-extra');
 const SerialPort = require('serialport');
@@ -26,19 +26,6 @@ serialPortsMenu.addEventListener("mouseover", function (event) {
 });
 
 window.addEventListener('load', function load(event) {
-    document.getElementById('serialConnectButton').addEventListener('click', function () {
-        var comPortSelected = document.getElementById('serialMenu').value;
-        if (comPortSelected !== "none" && comPortSelected !== "" && comPortSelected !== "undefined") {
-            localStorage.setItem("comPort", comPortSelected);
-            ipcRenderer.send("serialConnect", "");
-            document.getElementById('content_hoverButton').style.color = '#FFFFFF';
-            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_connect'] + comPortSelected;
-        } else {
-            document.getElementById('content_hoverButton').style.color = '#FFFFFF';
-            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_select_port'];
-            return;
-        }
-    });
     document.getElementById('verifyButton').onclick = function (event) {
         try {
             fs.accessSync('.\\compiler\\tmp', fs.constants.W_OK);
@@ -74,7 +61,7 @@ window.addEventListener('load', function load(event) {
         });
         document.getElementById('content_serial').innerHTML += MSG['IDE_verif_progress'];
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -110,7 +97,7 @@ window.addEventListener('load', function load(event) {
         else
             var cmd = 'arduino-cli.exe upload -p ' + comPortSelected + ' -b ' + upload_arg + ' ' + file_path;
         exec(cmd, {
-            cwd: './arduino'
+            cwd: './compiler'
         }, (error, stdout, stderr) => {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
@@ -132,4 +119,17 @@ window.addEventListener('load', function load(event) {
             });
         });
     };
+    document.getElementById('serialConnectButton').addEventListener('click', function () {
+        var comPortSelected = document.getElementById('serialMenu').value;
+        if (comPortSelected !== "none" && comPortSelected !== "" && comPortSelected !== "undefined") {
+            localStorage.setItem("comPort", comPortSelected);
+            ipcRenderer.send("serialConnect", "");
+            document.getElementById('content_hoverButton').style.color = '#FFFFFF';
+            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_connect'] + comPortSelected;
+        } else {
+            document.getElementById('content_hoverButton').style.color = '#FFFFFF';
+            document.getElementById('content_hoverButton').innerHTML = MSG['IDE_select_port'];
+            return;
+        }
+    });
 });
