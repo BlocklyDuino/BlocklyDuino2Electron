@@ -1,13 +1,16 @@
 var MSG = {
+    title: "BlocklyDuino",
+    appName: "BlocklyDuino",
     blocks: "Blocs",
-    catLogic: "Lògica",
-    catLoops: "Bucles",
-    catMath: "Matemàtiques",
-    catText: "Text",
-    catLists: "Llstes",
-    catColour: "Color",
-    catVariables: "Variables",
-    catFunctions: "Funcions",
+    prog: "Program",    
+    catLogic: "💡 Lògica",
+    catLoops: "↻ Bucles",
+    catMath: "+ Matemàtiques",
+    catText: "ℜ Text",
+    catLists: "☰ Llstes",
+    catColour: "🌈 Color",
+    catVariables: "❓ Variables",
+    catFunctions: "🝡(x) Funcions",
     listVariable: "llista",
     textVariable: "text",
     screenshot: "Descarrega una captura de pantalla",
@@ -28,6 +31,8 @@ var MSG = {
     newButton_span: "Projecte nou",
     saveXMLButton_span: "Desa fitxer BlocklyDuino",
     loadXMLfakeButton_span: "Carrega fitxer BlocklyDuino",
+    loadXML_span: "Replace existing blocks?\n'Cancel' will merge.",
+    loadXML_error_span: "Error parsing XML:\n",    
     resetButton_span: "Restableix BlocklyDuino",
     helpButton_span: "ajuda",
     copyCodeButton_span: "Copia codi a  porta-retalls",
@@ -71,7 +76,7 @@ var MSG = {
     optionFontSizePage: "Mida del tipus de lletra pàgina",
     optionFontSpacingPage: "Espaiat de lletra pàgina",
     keyMappingExplanationSpan: "<p>Podeu entrar al mode <em>accessibilitat </em> prement <strong>Shift + Ctrl + k</strong>.</p><p>El mapa del teclat es pot personalitzar activant-lo.</p><p> Podeu veure <strong>documentació </strong> més completa si <strong><a href='https://github.com/BlocklyDuino/BlocklyDuino-v2' target='_blank'>premeu aquí '?'</a></strong>.</span></p>",
-    //arduino_CLI_functions.js
+    //CLI_functions.js
     config_sideButton_span: "Control del compilador Arduino CLI",
     arduinoCLI_githubLinkButton_span: "documentació",
     coreUpdateButton_msg: "S'està actualitzant...\n<i class='fa fa-spinner fa-pulse fa-1_5x fa-fw'></i>",
@@ -91,7 +96,7 @@ var MSG = {
     searchlLibButton_span: "cerca aquesta biblioteca",
     installLibInput_span: "nom de la biblioteca a instal·lar",
     installLibButton_span: "instal·la aquesta biblioteca"
-    //arduino_IDE_functions.js
+    //IDE_functions.js
     IDE_connect: 'Connecta al port ',
     IDE_select_port: 'Selecciona el port !',
     IDE_select_board: 'Selecciona la placa !',
