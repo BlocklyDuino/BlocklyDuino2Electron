@@ -123,6 +123,7 @@ window.addEventListener('load', function load(event) {
         var comPortSelected = document.getElementById('serialMenu').value;
         if (comPortSelected !== "none" && comPortSelected !== "" && comPortSelected !== "undefined") {
             localStorage.setItem("comPort", comPortSelected);
+            localStorage.setItem("availableSpeed", JSON.stringify(profile.default['serialList']));
             ipcRenderer.send("serialConnect", "");
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
             document.getElementById('content_hoverButton').innerHTML = MSG['IDE_connect'] + comPortSelected;

@@ -1,8 +1,17 @@
 var {ipcRenderer} = require("electron");
 var {dialog } = require("electron").remote;
 var fs = require('fs-extra');
-
+    
 window.addEventListener('load', function load(event) {
+    // prepare serial window
+    var serialConnectSpeedMenu = document.getElementById('serialConnectSpeed_Menu');
+    var serialConnectSpeedAvailable = JSON.parse(localStorage.getItem("availableSpeed"));
+    serialConnectSpeedAvailable.forEach(function (serialConnectSpeedAvailable) {
+            var option = document.createElement('option');
+            option.value = serialConnectSpeedAvailable;
+            option.text = serialConnectSpeedAvailable;
+            serialConnectSpeedMenu.appendChild(option);
+        });
     var connexion = false;
     document.getElementById('btn_serialSend').disabled = true;
     document.getElementById('btn_serialPeekClear').onclick = function () {
@@ -72,5 +81,7 @@ window.addEventListener('load', function load(event) {
                     })
                 }
         })
+    };
+    document.getElementById('btn_serialChart').onclick = function () {
     };
 });
