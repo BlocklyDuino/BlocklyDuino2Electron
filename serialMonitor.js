@@ -1,7 +1,7 @@
 var {ipcRenderer} = require("electron");
 var {dialog } = require("electron").remote;
 var fs = require('fs-extra');
-    
+
 window.addEventListener('load', function load(event) {
     // prepare serial window
     var serialConnectSpeedMenu = document.getElementById('serialConnectSpeed_Menu');
@@ -13,9 +13,11 @@ window.addEventListener('load', function load(event) {
             serialConnectSpeedMenu.appendChild(option);
         });
     var connexion = false;
+    var graph = false;
     document.getElementById('btn_serialSend').disabled = true;
     document.getElementById('btn_serialPeekClear').onclick = function () {
-        document.getElementById('serialPeek').textContent = '';
+        document.getElementById('serialPeek').textContent = '';        
+        line0.data = [];
     };
     document.getElementById('btn_serialSend').onclick = function () {
         var input = document.getElementById('serialSendBox').value;
@@ -36,6 +38,7 @@ window.addEventListener('load', function load(event) {
                 document.getElementById('serialPeek').innerHTML += 'arrêt<br>';
             });
             connexion = false;
+            smoothieChart.stop();
         } else {
             SerialPortToMonitor = new SerialPort(comPortToUse, {
                     baudRate: baud
@@ -49,6 +52,8 @@ window.addEventListener('load', function load(event) {
             SerialPortToMonitor.on('open', function () {
                 document.getElementById('serialPeek').innerHTML += 'démarrage de la communication<br>';
                 parser.on('data', function (data) {
+                    document.getElementById('serialSendBox').value = parseInt(data, 10);                    
+                    smoothieChart.start();
                     document.getElementById('serialPeek').innerHTML += data + "<br>";
                     document.getElementById('serialPeek').scrollTop = document.getElementById('serialPeek').scrollHeight;
                     document.getElementById('serialPeek').animate({
@@ -57,6 +62,7 @@ window.addEventListener('load', function load(event) {
                 });
             });
             connexion = true;
+            smoothieChart.start();
         }
     };
     document.getElementById('btn_serialPeekCSV').onclick = function () {
@@ -83,5 +89,14 @@ window.addEventListener('load', function load(event) {
         })
     };
     document.getElementById('btn_serialChart').onclick = function () {
+        if (!graph) {
+            document.getElementById('serialPeek').style.width = "120px";
+            document.getElementById('serialGraphWindow').style.display = 'block';
+            graph = true;
+        } else {
+            document.getElementById('serialPeek').style.width = "610px";
+            document.getElementById('serialGraphWindow').style.display = 'none';
+            graph = false;
+        }
     };
 });

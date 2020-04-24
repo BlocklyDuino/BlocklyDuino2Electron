@@ -46,18 +46,18 @@ function createSerialWindow() {
             nodeIntegration: true
         },
         resizable: false,
-        icon: __dirname + './src/icon.ico'
+        icon: __dirname + '/src/icon.ico'
     });
-    SerialWindow.loadFile('./www/blocklyduino/serialMonitor.html');
+    SerialWindow.loadFile('./www/electron/serialMonitor.html');
     SerialWindow.setMenu(null);
     SerialWindow.on('closed', function () {
         SerialWindow = null;
     });
-    devtools = new BrowserWindow();
-    SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    SerialWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
+    // devtools = new BrowserWindow();
+    // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // SerialWindow.webContents.openDevTools({
+        // mode: 'detach'
+    // });
 }
 ;
 
@@ -95,11 +95,11 @@ app.on('ready', () => {
     createBlocklyWindow();
     globalShortcut.register('F12', openDevTools);
     globalShortcut.register('F5', refresh);
-    devtools = new BrowserWindow();
-    BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    BlocklyWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
+    // devtools = new BrowserWindow();
+    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // BlocklyWindow.webContents.openDevTools({
+        // mode: 'detach'
+    // });
     tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('BlocklyDuino');
 });
