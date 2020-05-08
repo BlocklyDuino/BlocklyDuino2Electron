@@ -5,12 +5,12 @@
         <meta name="google" value="notranslate">
         <title>BlocklyDuino</title>
         <link rel="icon" type="image/png" href="./blocklyduino/media/logo_only.png" />
-        <link rel="stylesheet" href="./blocklyduino/css/font_awesome_all.min.css" />
-        <link rel="stylesheet" href="./blocklyduino/css/style.css" />
-        <link rel="stylesheet" href="./blocklyduino/css/keyboard_nav.css" />
-        <link rel="stylesheet" href="./blocklyduino/css/prettify.css" />
         <link rel="stylesheet" href="./blocklyduino/css/blocklyduino.css" />
+        <link rel="stylesheet" href="./blocklyduino/css/font_awesome_all.min.css" />
+        <link rel="stylesheet" href="./blocklyduino/css/keyboard_nav.css" />
         <link rel="stylesheet" href="./blocklyduino/css/lateral-panel.css" />
+        <link rel="stylesheet" href="./blocklyduino/css/prettify.css" />
+        <link rel="stylesheet" href="./blocklyduino/css/style.css" />
     </head>
     <body>
         <div class="table_wrapper">
@@ -19,12 +19,17 @@
                     <td style="width: 268px;">
                         <span id="appName" class='TitleText'></span> 
                     </td>
-                    <td class="tabMiddle">
+                    <td class="tabMiddle" style="width: 100%;">
                         <span id="content_hoverButton"></span>
                     </td>
                 </tr>
                 <tr style="height: 40px;">
                     <td class="tabmax" colspan="2">
+                        <button id="fullScreenButton" class="iconButtons" onclick="fullScreen()">
+                            <span id="fullScreenButton_span" style="font-size: 1em;">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                            </span>
+                        </button>
                         <button id="undoButton" class="iconButtons" onclick="Code.Undo()">
                             <span id="undoButton_span" style="font-size: 1em;">
                                 <i class="fas fa-undo-alt"></i>
@@ -87,7 +92,7 @@
                                 <i class="fas fa-file-upload"></i>
                             </span>
                         </button>
-                        <input type="file" id="loadXMLfile" hidden onchange="loadXmlBlocklyFile(this.files)" />
+                        <input type="file" id="loadXMLfile" hidden onchange="Code.loadXmlBlocklyFile(this.files)" />
                         <button id="resetButton" class="iconButtons" onclick="Code.ResetWorkspace()">
                             <span id="resetButton_span">
                                 <i class="fas fa-power-off"></i>
@@ -148,17 +153,17 @@
                         <span id="CLI_title_span" class="UIText">CLI</span>
                         <br>
                         <div id="CLI_title" style="display:flex;text-align: center;">
-                            <button id="coreUpdateButton" class="iconButtons" onclick="">
+                            <button id="coreUpdateButton" class="iconButtons CLI" onclick="">
                                 <span id="coreUpdateButton_span">
                                     <i class="fas fa-sync"></i>
                                 </span>
                             </button>
-                            <button id="cleanCLIcacheButton" class="iconButtons" onclick="">
+                            <button id="cleanCLIcacheButton" class="iconButtons CLI" onclick="">
                                 <span id="cleanCLIcache_span">
                                     <i class="fas fa-eraser"></i>
                                 </span>
                             </button>
-                            <button id="listBoardsButton" class="iconButtons" onclick="">
+                            <button id="listBoardsButton" class="iconButtons CLI" onclick="">
                                 <span id="listBoardsButton_span">
                                     <i class="fas fa-list"></i>
                                 </span>
@@ -168,10 +173,10 @@
                             </a>
                         </div>
                         <br>
-                        <span id="installBoard_title_span" class="UIText">install board</span>
+                        <span id="installBoard_title_span" class="UIText CLI">install board</span>
                         <br>
                         <input type="text" id="installBoardsInput" name="installBoardsInput" style="width: 250px;font-size:20px;">
-                        <button id="installBoardsButton" class="iconButtons" onclick="">
+                        <button id="installBoardsButton" class="iconButtons CLI" onclick="">
                             <span id="installBoardsButton_span">
                                 <i class="fas fa-cloud-download-alt"></i>
                             </span>
@@ -181,7 +186,7 @@
                         <span id="searchlLib_title_span" class="UIText">search library</span>
                         <br>
                         <input type="text" id="searchlLibInput" name="searchlLibInput" style="width: 250px;font-size:20px;">
-                        <button id="searchlLibButton" class="iconButtons" onclick="">
+                        <button id="searchlLibButton" class="iconButtons CLI" onclick="">
                             <span id="searchlLibButton_span">
                                 <i class="fab fa-searchengin"></i>
                             </span>
@@ -191,7 +196,7 @@
                         <span id="installLib_title_span" class="UIText">install library</span>
                         <br>
                         <input type="text" id="installLibInput" name="installLibInput" size="18" style="width: 250px;font-size:20px;">
-                        <button id="installLibButton" class="iconButtons" onclick="">
+                        <button id="installLibButton" class="iconButtons CLI" onclick="">
                             <span id="installLibButton_span">
                                 <i class="fas fa-cloud-download-alt"></i>
                             </span>
@@ -255,6 +260,9 @@
                            onchange="changeRenderingConstant(this.value)" />
                     <br>
                     <br>
+                    <span id="keyMappingExplanationSpan" class="UITextSmall"></span>
+                    <br>
+                    <br>
                     <span id="accessibilitySpan" class="UIText"></span>
                     <input id="accessibilityModeCheck" type="checkbox" onclick="toggleAccessibilityMode(this.checked)">
                     <br>
@@ -267,7 +275,6 @@
                         <option value="line" id="lineCursorSpan">line</option>
                     </select>
                     <br>
-                    <span id="keyMappingExplanationSpan" class="UITextSmall"></span>
                 </div>
             </div>
         </div>
@@ -294,9 +301,9 @@
     <script src="./blocklyduino/js/blockly/keyboard_nav.js"></script>
     <script src="./blocklyduino/js/blockly/playground.js"></script>
     <!-- BlocklyDuino libraries of external functions -->
-    <script src="./blocklyduino/js/addon/prettify.js"></script>
     <script src="./blocklyduino/js/addon/clipboard.min.js"></script>
     <script src="./blocklyduino/js/addon/diff.js"></script>
+    <script src="./blocklyduino/js/addon/prettify.js"></script>
     <script src="./blocklyduino/js/buttons_functions.js"></script>
     <script src="./blocklyduino/js/dialog.js"></script>
     <!-- BlocklyDuino specific: block design -->

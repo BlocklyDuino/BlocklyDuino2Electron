@@ -2,10 +2,10 @@
 dragElement(document.getElementById("keyboard_nav"));
 
 function dragElement(elmnt) {
-    var pos1 = 0,
-    pos2 = 0,
-    pos3 = 0,
-    pos4 = 0;
+    var     pos1 = 0,
+            pos2 = 0,
+            pos3 = 0,
+            pos4 = 0;
     if (document.getElementById(elmnt.id + "_header")) {
         // if present, the header is where you move the DIV from:
         document.getElementById(elmnt.id + "_header").onmousedown = dragMouseDown;
@@ -46,6 +46,12 @@ function dragElement(elmnt) {
 };
 
 //icons button mouser over
+document.getElementById('fullScreenButton').onmouseover = function () {
+    document.getElementById("content_hoverButton").textContent = MSG['fullScreenButton_span'];
+};
+document.getElementById('fullScreenButton').onmouseout = function () {
+    document.getElementById("content_hoverButton").textContent = "";
+};
 document.getElementById('undoButton').onmouseover = function () {
     document.getElementById("content_hoverButton").textContent = MSG['undoButton_span'];
 };

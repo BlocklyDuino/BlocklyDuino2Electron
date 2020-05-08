@@ -37,7 +37,7 @@ function createBlocklyWindow() {
 }
 ;
 
-function createSerialWindow() {
+function createSerialWindow(argLangChoice) {
     SerialWindow = new BrowserWindow({
         width: 640,
         height: 530,
@@ -48,16 +48,19 @@ function createSerialWindow() {
         resizable: false,
         icon: __dirname + '/src/icon.ico'
     });
-    SerialWindow.loadFile('./www/electron/serialMonitor.html');
+    if (argLangChoice !== "" || argLangChoice !== "undefined")
+        SerialWindow.loadFile('./www/electron/serialMonitor.html?lang=' + argLangChoice);
+    else
+        SerialWindow.loadFile('./www/electron/serialMonitor.html');
     SerialWindow.setMenu(null);
     SerialWindow.on('closed', function () {
         SerialWindow = null;
     });
-    // devtools = new BrowserWindow();
-    // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    // SerialWindow.webContents.openDevTools({
-        // mode: 'detach'
-    // });
+    devtools = new BrowserWindow();
+    SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    SerialWindow.webContents.openDevTools({
+        mode: 'detach'
+    });
 }
 ;
 
@@ -95,11 +98,11 @@ app.on('ready', () => {
     createBlocklyWindow();
     globalShortcut.register('F12', openDevTools);
     globalShortcut.register('F5', refresh);
-    // devtools = new BrowserWindow();
-    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    // BlocklyWindow.webContents.openDevTools({
-        // mode: 'detach'
-    // });
+    devtools = new BrowserWindow();
+    BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    BlocklyWindow.webContents.openDevTools({
+        mode: 'detach'
+    });
     tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('BlocklyDuino');
 });
@@ -114,8 +117,9 @@ app.on('window-all-closed', function () {
         app.quit();
 });
 
-ipcMain.on("serialConnect", function () {
-    createSerialWindow();
+ipcMain.on("serialConnect", (event, argLangChoice) => {
+    createSerialWindow(argLangChoice);
+    console.log('toto' + argLangChoice);
 });
 ipcMain.on("factory", function () {
     createFactoryWindow();

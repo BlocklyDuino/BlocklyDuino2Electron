@@ -205,30 +205,40 @@ Code.getBBox_ = function (element) {
 Code.LANG = Code.getLang();
 
 /**
+ * Private variable to save the previous version of the Arduino Code.
+ * @type {!String}
+ * @private
+ */
+Code.PREV_CODE_ = 'void setup() {\n\n}\n\n\nvoid loop() {\n\n}';
+
+/**
  * Populate the currently selected pane with content generated from the blocks.
  */
 Code.renderContent = function () {
-    Code.attemptCodeGeneration(Blockly.Arduino);
+    var codePeakPre = document.getElementById('code_peek_content');
+    var generatedCode = Blockly.Arduino.workspaceToCode(Code.workspace);
+    codePeakPre.textContent = Blockly.Arduino.workspaceToCode(Code.workspace);
+    if (generatedCode !== Code.PREV_CODE_) {
+        var diff = JsDiff.diffWords(Code.PREV_CODE_, generatedCode);
+        var resultStringArray = [];
+        for (var i = 0; i < diff.length; i++) {
+            if (!diff[i].removed) {
+                var escapedCode = diff[i].value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                if (diff[i].added) {
+                    resultStringArray.push(
+                        '<span class="new_code_highlight">' + escapedCode + '</span>');
+                } else {
+                    resultStringArray.push(escapedCode);
+                }
+            }
+        }
+        Code.PREV_CODE_ = generatedCode;
+        codePeakPre.innerHTML = PR.prettyPrintOne(resultStringArray.join(''), 'cpp');
+    }
+    // Remove the 'prettyprinted' class, so that Prettify will recalculate.
+    codePeakPre.className = codePeakPre.className.replace('prettyprinted', '');
     if (typeof PR == 'object') {
         PR.prettyPrint();
-    }
-};
-
-/**
- * Attempt to generate the code and display it in the UI, pretty printed.
- * @param generator {!Blockly.Generator} The generator to use.
- */
-Code.attemptCodeGeneration = function (generator) {
-    var content = document.getElementById('code_peek_content');
-    content.textContent = '';
-    if (Code.checkAllGeneratorFunctionsDefined(generator)) {
-        var code = generator.workspaceToCode(Code.workspace);
-        content.textContent = code;
-        // Remove the 'prettyprinted' class, so that Prettify will recalculate.
-        content.className = content.className.replace('prettyprinted', '');
-        content.className = content.className.replace('prettyprint', '');
-        content.className = content.className.replacee(/\bprettyprint\b/g, '');
-        content.classList.remove("prettyprint");
     }
 };
 
@@ -267,25 +277,26 @@ Code.init = function () {
     setOnOffLine();
     var clipboard = new Clipboard(document.getElementById('copyCodeButton'));
     var rtl = Code.isRtl();
+    //define resizable workspace
     var container = document.getElementById('content_area');
     var blocklyDiv = document.getElementById('content_blocks');
-	var onresize = function(e) {
-		var element = container;
-		var x = 0;
-		var y = 0;
-		do {
-			x += element.offsetLeft;
-			y += element.offsetTop;
-			element = element.offsetParent;
-		} while (element);
-		blocklyDiv.style.left = x + 'px';
-		blocklyDiv.style.top = y + 'px';
-		blocklyDiv.style.width = container.offsetWidth + 'px';
-		blocklyDiv.style.height = container.offsetHeight + 'px';
-		Blockly.svgResize(Code.workspace);
-	};
+    var onresize = function (e) {
+        var element = container;
+        var x = 0;
+        var y = 0;
+        do {
+            x += element.offsetLeft;
+            y += element.offsetTop;
+            element = element.offsetParent;
+        } while (element);
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = container.offsetWidth + 'px';
+        blocklyDiv.style.height = container.offsetHeight + 'px';
+        Blockly.svgResize(Code.workspace);
+    };
     window.addEventListener('resize', onresize, false);
-    
+
     for (var messageKey in MSG) {
         if (messageKey.indexOf('cat') === 0) {
             Blockly.Msg[messageKey.toUpperCase()] = MSG[messageKey];
@@ -295,7 +306,6 @@ Code.init = function () {
     var match = location.search.match(/renderer=([^&]+)/);
     var renderer = match ? match[1] : 'geras';
     document.forms.options.elements.renderer.value = renderer;
-    
     Code.workspace = Blockly.inject('content_blocks', {
             comments: true,
             collapse: true,
@@ -331,8 +341,9 @@ Code.init = function () {
                 scaleSpeed: 1.1
             }
         });
+
     //button callback register with functions
-    Code.workspace.registerButtonCallback('createVarBtnInt', createVarBtnIntCallBack);   
+    Code.workspace.registerButtonCallback('createVarBtnInt', createVarBtnIntCallBack);
     Code.workspace.registerButtonCallback('createVarBtnFloat', createVarBtnFloatCallBack);
     Code.workspace.registerButtonCallback('createVarBtnString', createVarBtnStringCallBack);
     Code.workspace.registerButtonCallback('createVarBtnBoolean', createVarBtnBooleanCallBack);
@@ -340,10 +351,35 @@ Code.init = function () {
     Code.workspace.registerToolboxCategoryCallback('VARIABLE_TYPED_NUM', numVariablesCallBack);
     Code.workspace.registerToolboxCategoryCallback('VARIABLE_TYPED_TEXT', textVariablesCallBack);
     Code.workspace.registerToolboxCategoryCallback('VARIABLE_TYPED_BOOLEAN', booleanVariablesCallBack);
-    
+
     Code.workspace.configureContextMenu = configureContextualMenu;
 
-    Code.loadBlocks('');
+	// load blocks stored in session or passed by url
+	var urlFile = Code.getStringParamFromUrl('url', '');
+	var loadOnce = null;
+	try {
+			loadOnce = window.localStorage.loadOnceBlocks;
+		} catch (e) {
+			// Firefox sometimes throws a SecurityError when accessing
+			// localStorage.
+			// Restarting Firefox fixes this, so it looks like a bug.
+		}        
+	if (urlFile) {
+		if (loadOnce !== null)
+			{
+			if (!confirm(MSG['xmlLoad']))
+				{
+				Code.loadBlocks();
+				}
+			}
+		// $.get( urlFile, function( data ) {
+	        // Code.loadBlocks(data );
+			// }, 'text');
+	} else {
+		Code.loadBlocks();
+	}
+    
+    // Code.loadBlocks('');
     // Hook a save function onto unload.
     window.addEventListener('unload', auto_save_and_restore_blocks, false);
     if ('BlocklyStorage' in window) {
@@ -351,15 +387,13 @@ Code.init = function () {
     }
     onresize();
     Blockly.svgResize(Code.workspace);
-    
+
     //change theme color
     match = location.search.match(/theme=([^&]+)/);
     var theme = match ? match[1] : 'classic';
     document.forms.options.elements.theme.value = theme;
     changeTheme(theme);
-
-    // Lazy-load the syntax-highlighting.
-    window.setTimeout(Code.importPrettify, 1);
+    
     //keyboard nav attribution
     var actions = [
         Blockly.navigation.ACTION_PREVIOUS,
@@ -377,56 +411,67 @@ Code.init = function () {
         Blockly.navigation.ACTION_MOVE_WS_CURSOR_RIGHT
     ];
     createKeyMappingList(actions);
-    
-	// function used for dragging and moving splitted windows
+
+    // function used for dragging and moving splitted windows
     // needs onresize function defined ahead
-	function dragElement( element, direction, first, second) {
-		var mouse_down_info;
-		element.onmousedown = onMouseDown;		
-		function onMouseDown( e ) {
-			mouse_down_info = {e,
-				  offsetLeft:  element.offsetLeft,
-				  offsetTop:   element.offsetTop,
-				  firstWidth:  first.offsetWidth,
-				  secondWidth: second.offsetWidth,
-				  firstHeight:  first.offsetHeight,
-				  secondHeight: second.offsetHeight};
-			document.onmousemove = onMouseMove;
-			document.onmouseup = () => {
-				//console.log("mouse up");
-				document.onmousemove = document.onmouseup = null;
-				}
-		}		
-		function onMouseMove( e ) {
-			var delta = {x: e.clientX - mouse_down_info.e.x, y: e.clientY - mouse_down_info.e.y};			
-			if (direction === "H" ) // Horizontal
-				{
-				// prevent negative-sized elements
-				delta.x = Math.min(Math.max(delta.x, -mouse_down_info.firstWidth), mouse_down_info.secondWidth);	    
-				element.style.left = mouse_down_info.offsetLeft + delta.x + "px";
-				first.style.width = (mouse_down_info.firstWidth + delta.x) + "px";
-				second.style.width = (mouse_down_info.secondWidth - delta.x) + "px";
-				}			
-			if (direction === "V" ) // Vertical
-				{
-				// prevent negative-sized elements
-				delta.y = Math.min(Math.max(delta.y, -mouse_down_info.firstHeight), mouse_down_info.secondHeight);	    
-				element.style.top = mouse_down_info.offsetTop + delta.y + "px";
-				first.style.height = (mouse_down_info.firstHeight + delta.y) + "px";
-				second.style.height = (mouse_down_info.secondHeight - delta.y) + "px";
-				}
-		onresize();
-		Blockly.svgResize(Code.workspace);
-		}
-	}
-	dragElement(document.getElementById("separator"), "H", document.getElementById("content_area"), document.getElementById("code_peek"));
-	dragElement(document.getElementById("barre_h"), "V", document.getElementById("wrapper_up"), document.getElementById("content_serial"));    
-    Code.renderPeekCode();
-    Code.workspace.addChangeListener(Code.renderPeekCode);
+    function dragElement(element, direction, first, second) {
+        var mouse_down_info;
+        element.onmousedown = onMouseDown;
+        function onMouseDown(e) {
+            mouse_down_info = {
+                e,
+                offsetLeft: element.offsetLeft,
+                offsetTop: element.offsetTop,
+                firstWidth: first.offsetWidth,
+                secondWidth: second.offsetWidth,
+                firstHeight: first.offsetHeight,
+                secondHeight: second.offsetHeight
+            };
+            document.onmousemove = onMouseMove;
+            document.onmouseup = () => {
+                //console.log("mouse up");
+                document.onmousemove = document.onmouseup = null;
+            }
+        }
+        function onMouseMove(e) {
+            var delta = {
+                x: e.clientX - mouse_down_info.e.x,
+                y: e.clientY - mouse_down_info.e.y
+            };
+            if (direction === "H") // Horizontal
+            {
+                // prevent negative-sized elements
+                delta.x = Math.min(Math.max(delta.x, -mouse_down_info.firstWidth), mouse_down_info.secondWidth);
+                element.style.left = mouse_down_info.offsetLeft + delta.x + "px";
+                first.style.width = (mouse_down_info.firstWidth + delta.x) + "px";
+                second.style.width = (mouse_down_info.secondWidth - delta.x) + "px";
+                if (document.getElementById("code_peek").offsetWidth < 50)
+                    document.getElementById("copyCodeButton").style.visibility = 'hidden';
+                else
+                    document.getElementById("copyCodeButton").style.visibility = 'visible';
+            }
+            if (direction === "V") // Vertical
+            {
+                // prevent negative-sized elements
+                delta.y = Math.min(Math.max(delta.y, -mouse_down_info.firstHeight), mouse_down_info.secondHeight);
+                element.style.top = mouse_down_info.offsetTop + delta.y + "px";
+                first.style.height = (mouse_down_info.firstHeight + delta.y) + "px";
+                second.style.height = (mouse_down_info.secondHeight - delta.y) + "px";
+            }
+            onresize();
+            Blockly.svgResize(Code.workspace);
+        }
+    }
+    dragElement(document.getElementById("separator"), "H", document.getElementById("content_area"), document.getElementById("code_peek"));
+    dragElement(document.getElementById("barre_h"), "V", document.getElementById("wrapper_up"), document.getElementById("content_serial"));
+
+    Code.renderContent();
+    Code.workspace.addChangeListener(Code.renderContent);
+
+    // Lazy-load the syntax-highlighting.
+    window.setTimeout(Code.importPrettify, 1);
 };
 
-    
-	
 /**
  * Initialize the page language.
  */
@@ -463,7 +508,7 @@ Code.initLanguage = function () {
         languageMenu.options.add(option);
     }
     languageMenu.addEventListener('change', Code.changeLanguage, true);
-    
+
     // Inject language strings.
     document.title = MSG['title'];
     document.getElementById('appName').textContent = MSG['appName'];
@@ -475,6 +520,7 @@ Code.initLanguage = function () {
     document.getElementById('boardMenu').title = MSG['boardSpan'];
     document.getElementById('serialIcon').title = MSG['serialSpan'];
     document.getElementById('serialMenu').title = MSG['serialSpan'];
+    document.getElementById('fullScreenButton').title = MSG['fullScreenButton_span'];
     document.getElementById('undoButton').title = MSG['undoButton_span'];
     document.getElementById('redoButton').title = MSG['redoButton_span'];
     document.getElementById('verifyButton').title = MSG['verifyButton_span'];
@@ -490,7 +536,7 @@ Code.initLanguage = function () {
     document.getElementById('copyCodeButton').title = MSG['copyCodeButton_span'];
     document.getElementById('keyMappingModalSpan').textContent = MSG['keyMappingModalSpan'];
     document.getElementById('detailedCompilation_span').textContent = MSG['detailedCompilation_span'];
-
+    // CLI panel
     document.getElementById('lateral-panel-CLI-label').title = MSG['config_sideButton_span'];
     document.getElementById('CLI_title_span').textContent = MSG['CLI_title_span'];
     document.getElementById('CLI_githubLinkButton').title = MSG['CLI_githubLinkButton_span'];
@@ -502,22 +548,8 @@ Code.initLanguage = function () {
     document.getElementById('installLibButton').title = MSG['installLibButton_span'];
     document.getElementById('installBoard_title_span').textContent = MSG['installBoard_title_span'];
     document.getElementById('searchlLib_title_span').textContent = MSG['searchlLib_title_span'];
-    document.getElementById('installLib_title_span').textContent = MSG['installLib_title_span'];
-
-    Blockly.navigation.ACTION_PREVIOUS.name = MSG['actionName0'];
-    Blockly.navigation.ACTION_OUT.name = MSG['actionName1'];
-    Blockly.navigation.ACTION_NEXT.name = MSG['actionName2'];
-    Blockly.navigation.ACTION_IN.name = MSG['actionName3'];
-    Blockly.navigation.ACTION_INSERT.name = MSG['actionName4'];
-    Blockly.navigation.ACTION_MARK.name = MSG['actionName5'];
-    Blockly.navigation.ACTION_DISCONNECT.name = MSG['actionName6'];
-    Blockly.navigation.ACTION_TOOLBOX.name = MSG['actionName7'];
-    Blockly.navigation.ACTION_EXIT.name = MSG['actionName8'];
-    Blockly.navigation.ACTION_MOVE_WS_CURSOR_UP.name = MSG['actionName9'];
-    Blockly.navigation.ACTION_MOVE_WS_CURSOR_LEFT.name = MSG['actionName10'];
-    Blockly.navigation.ACTION_MOVE_WS_CURSOR_DOWN.name = MSG['actionName11'];
-    Blockly.navigation.ACTION_MOVE_WS_CURSOR_RIGHT.name = MSG['actionName12'];
-
+    document.getElementById('installLib_title_span').textContent = MSG['installLib_title_span'];    
+    //setup panel
     document.getElementById('accessibilitySpan').textContent = MSG['accessibilitySpan'];
     document.getElementById('defaultCursorSpan').textContent = MSG['defaultCursorSpan'];
     document.getElementById('basicCursorSpan').textContent = MSG['basicCursorSpan'];
@@ -536,6 +568,21 @@ Code.initLanguage = function () {
     document.getElementById('optionFontSizePage').textContent = MSG['optionFontSizePage'];
     document.getElementById('optionFontSpacingPage').textContent = MSG['optionFontSpacingPage'];
     document.getElementById('keyMappingExplanationSpan').innerHTML = MSG['keyMappingExplanationSpan'];
+    //keyboard nav
+    Blockly.navigation.ACTION_PREVIOUS.name = MSG['actionName0'];
+    Blockly.navigation.ACTION_OUT.name = MSG['actionName1'];
+    Blockly.navigation.ACTION_NEXT.name = MSG['actionName2'];
+    Blockly.navigation.ACTION_IN.name = MSG['actionName3'];
+    Blockly.navigation.ACTION_INSERT.name = MSG['actionName4'];
+    Blockly.navigation.ACTION_MARK.name = MSG['actionName5'];
+    Blockly.navigation.ACTION_DISCONNECT.name = MSG['actionName6'];
+    Blockly.navigation.ACTION_TOOLBOX.name = MSG['actionName7'];
+    Blockly.navigation.ACTION_EXIT.name = MSG['actionName8'];
+    Blockly.navigation.ACTION_MOVE_WS_CURSOR_UP.name = MSG['actionName9'];
+    Blockly.navigation.ACTION_MOVE_WS_CURSOR_LEFT.name = MSG['actionName10'];
+    Blockly.navigation.ACTION_MOVE_WS_CURSOR_DOWN.name = MSG['actionName11'];
+    Blockly.navigation.ACTION_MOVE_WS_CURSOR_RIGHT.name = MSG['actionName12'];
+    
 };
 
 /**

@@ -39,7 +39,7 @@ window.addEventListener('load', function load(event) {
         }
         var file_path = '.\\tmp';
         var file = '.\\compiler\\tmp\\tmp.ino';
-        var data = document.getElementById('content_code').innerText;
+        var data = document.getElementById('code_peek_content').innerText;
         var boardSelected = document.getElementById('boardMenu').value;
         if (boardSelected !== "none" && boardSelected !== "" && boardSelected !== "undefined") {
             document.getElementById('content_serial').style.color = '#FFFFFF';
@@ -120,11 +120,12 @@ window.addEventListener('load', function load(event) {
         });
     };
     document.getElementById('serialConnectButton').addEventListener('click', function () {
+        var langChoice = document.getElementById('languageMenu').value;
         var comPortSelected = document.getElementById('serialMenu').value;
         if (comPortSelected !== "none" && comPortSelected !== "" && comPortSelected !== "undefined") {
             localStorage.setItem("comPort", comPortSelected);
             localStorage.setItem("availableSpeed", JSON.stringify(profile.default['serialList']));
-            ipcRenderer.send("serialConnect", "");
+            ipcRenderer.send("serialConnect", langChoice);
             document.getElementById('content_hoverButton').style.color = '#FFFFFF';
             document.getElementById('content_hoverButton').innerHTML = MSG['IDE_connect'] + comPortSelected;
         } else {

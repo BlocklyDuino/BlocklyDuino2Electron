@@ -1,5 +1,5 @@
 /* .wrapper { */
-    /* display: flex; */
+/* display: flex; */
 /* } */
 #keyboard_nav {
     background-color: #ededed;
@@ -48,12 +48,6 @@ select {
 }
 .farSide > select {
     vertical-align: middle;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-}
-#languageMenu {
-    vertical-align: top;
     margin-left: 5px;
     margin-right: 5px;
     margin-top: 5px;
