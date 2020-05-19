@@ -24,12 +24,12 @@ function createBlocklyWindow() {
         icon: __dirname + '/src/icon.ico'
     });
     if (process.platform === 'win32' && process.argv.length >= 2) {
-        BlocklyWindow.loadFile('./www/index.html?url=' + process.argv[1]);
+        BlocklyWindow.loadFile('./www/' + process.argv[1]);
     } else {
         BlocklyWindow.loadFile('./www/index.html');
     }
     ;
-    BlocklyWindow.loadFile('./www/index.html');
+    // BlocklyWindow.loadFile('./www/index.html');
     BlocklyWindow.setMenu(null);
     BlocklyWindow.on('closed', function () {
         BlocklyWindow = null;
