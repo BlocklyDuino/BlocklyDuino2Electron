@@ -1,5 +1,5 @@
 var {ipcRenderer} = require("electron");
-var {dialog } = require("electron").remote;
+var {dialog} = require("electron").remote;
 var fs = require('fs-extra');
 
 window.addEventListener('load', function load(event) {
@@ -7,16 +7,16 @@ window.addEventListener('load', function load(event) {
     var serialConnectSpeedMenu = document.getElementById('serialConnectSpeed_Menu');
     var serialConnectSpeedAvailable = JSON.parse(localStorage.getItem("availableSpeed"));
     serialConnectSpeedAvailable.forEach(function (serialConnectSpeedAvailable) {
-            var option = document.createElement('option');
-            option.value = serialConnectSpeedAvailable;
-            option.text = serialConnectSpeedAvailable;
-            serialConnectSpeedMenu.appendChild(option);
-        });
+        var option = document.createElement('option');
+        option.value = serialConnectSpeedAvailable;
+        option.text = serialConnectSpeedAvailable;
+        serialConnectSpeedMenu.appendChild(option);
+    });
     var connexion = false;
     var graph = false;
     document.getElementById('btn_serialSend').disabled = true;
     document.getElementById('btn_serialPeekClear').onclick = function () {
-        document.getElementById('serialPeek').textContent = '';        
+        document.getElementById('serialPeek').textContent = '';
         line0.data = [];
     };
     document.getElementById('btn_serialSend').onclick = function () {
@@ -41,18 +41,18 @@ window.addEventListener('load', function load(event) {
             smoothieChart.stop();
         } else {
             SerialPortToMonitor = new SerialPort(comPortToUse, {
-                    baudRate: baud
-                });
+                baudRate: baud
+            });
             const parser = new Readline({
-                    delimiter: '\n'
-                });
+                delimiter: '\n'
+            });
             SerialPortToMonitor.pipe(parser);
             document.getElementById('btn_serialConnect').innerHTML = MSG['serial_btn_stop'];
             document.getElementById('btn_serialSend').disabled = false;
             SerialPortToMonitor.on('open', function () {
                 document.getElementById('serialPeek').innerHTML += MSG['serial_info_start'];
                 parser.on('data', function (data) {
-                    document.getElementById('serialSendBox').value = parseInt(data, 10);                    
+                    document.getElementById('serialSendBox').value = parseInt(data, 10);
                     smoothieChart.start();
                     document.getElementById('serialPeek').innerHTML += data + "<br>";
                     document.getElementById('serialPeek').scrollTop = document.getElementById('serialPeek').scrollHeight;
@@ -75,18 +75,18 @@ window.addEventListener('load', function load(event) {
                 }
             ]
         },
-            function (result) {
-            var code = document.getElementById('fenetre_term').innerHTML
-                code = code.split('<br>').join('\n')
-                if (result === null) {
-                    return
-                } else {
-                    fs.writeFile(result, code, function (err) {
-                        if (err)
-                            return console.log(err)
-                    })
-                }
-        })
+                function (result) {
+                    var code = document.getElementById('fenetre_term').innerHTML
+                    code = code.split('<br>').join('\n')
+                    if (result === null) {
+                        return
+                    } else {
+                        fs.writeFile(result, code, function (err) {
+                            if (err)
+                                return console.log(err)
+                        })
+                    }
+                })
     };
     document.getElementById('btn_serialChart').onclick = function () {
         if (!graph) {

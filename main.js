@@ -1,12 +1,12 @@
 ﻿// Modules to control application life and create native browser window
-        const {
-            app,
-            BrowserWindow,
-            electron,
-            ipcMain,
-            globalShortcut,
-            Tray
-        } = require('electron');
+const {
+    app,
+    BrowserWindow,
+    electron,
+    ipcMain,
+    globalShortcut,
+    Tray
+} = require('electron');
 
 let BlocklyWindow = null;
 let SerialWindow = null;
@@ -27,15 +27,13 @@ function createBlocklyWindow() {
         BlocklyWindow.loadFile('./www/' + process.argv[1]);
     } else {
         BlocklyWindow.loadFile('./www/index.html');
-    }
-    ;
-    // BlocklyWindow.loadFile('./www/index.html');
+    };
+    BlocklyWindow.loadFile('./www/index.html');
     BlocklyWindow.setMenu(null);
     BlocklyWindow.on('closed', function () {
         BlocklyWindow = null;
     });
-}
-;
+};
 
 function createSerialWindow(argLangChoice) {
     SerialWindow = new BrowserWindow({
@@ -56,53 +54,52 @@ function createSerialWindow(argLangChoice) {
     SerialWindow.on('closed', function () {
         SerialWindow = null;
     });
-    devtools = new BrowserWindow();
-    SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    SerialWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
-}
-;
+    // devtools = new BrowserWindow();
+    // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // SerialWindow.webContents.openDevTools({
+    // mode: 'detach'
+    // });
+};
 
 function createFactoryWindow() {
     FactoryWindow = new BrowserWindow({
         width: 1066,
         height: 640,
         'parent': BlocklyWindow,
+        webPreferences: {
+            nodeIntegration: true
+        },
         resizable: true,
         movable: true,
         frame: false,
         modal: false
     });
-    FactoryWindow.loadFile('./www/blocksfactory/blocksfactory.html');
-    FactoryWindow.setMenu(null);
-    FactoryWindow.on('closed', function () {
-        FactoryWindow = null;
-    });
-}
-;
+    // FactoryWindow.loadFile('./www/blocksfactory/blocksfactory.html');
+    // FactoryWindow.setMenu(null);
+    // FactoryWindow.on('closed', function () {
+    // FactoryWindow = null;
+    // });
+};
 
 function openDevTools(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
     if (BlocklyWindow) {
         BlocklyWindow.webContents.toggleDevTools();
-}
-}
-;
+    }
+};
 
 function refresh(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
     BlocklyWindow.webContents.reloadIgnoringCache();
-}
-;
+};
 
 app.on('ready', () => {
     createBlocklyWindow();
     globalShortcut.register('F12', openDevTools);
     globalShortcut.register('F5', refresh);
-    devtools = new BrowserWindow();
-    BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    BlocklyWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
+    // devtools = new BrowserWindow();
+    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // BlocklyWindow.webContents.openDevTools({
+        // mode: 'detach'
+    // });
     tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('BlocklyDuino');
 });

@@ -7,13 +7,20 @@
     "main": "main.js",
     "keywords": [
         "blockly",
+        "BLOCKLY",
+        "arduino",
+        "ARDUINO",
         "blocklyduinoreboot",
         "blocklyduino2",
         "BlocklyDuinoElectron",
         "BlocklyDuino2Electron",
-        "arduino",
         "blocks",
-        "scratch"
+        "scratch",
+        "electron",
+        "ELECTRON",
+        "serialport",
+        "SERIALPORT",
+        "electron-builder"
     ],
     "build": {
         "asar": true,
@@ -22,9 +29,9 @@
             "buildResources": "./src",
             "output": "./dist"
         },
+        "productName": "BlocklyDuino2",
         "win": {
             "target": [
-                "nsis",
                 "portable",
                 "zip"
             ],
@@ -41,10 +48,18 @@
         },
         "fileAssociations": {
             "ext": "bduino",
-            "name": "BLOCKLY File",
+            "name": "BlocklyDuino File",
             "role": "Editor",
             "icon": "src/icon.ico"
         },
+        "extraFiles": [
+            "compiler",
+            "sketchbook",
+            "www",
+            "README.md",
+            "LICENSE.md",
+            "config.json"
+        ],
         "publish": [
             {
                 "provider": "github",
@@ -55,7 +70,9 @@
         ]
     },
     "scripts": {
+        "postinstall": "electron-builder install-app-deps",
         "start": "electron .",
+        "compiler": "electron-builder --win --ia32",
         "prepare": "electron-build-env npm rebuild"
     },
     "repository": {
@@ -66,14 +83,15 @@
         "url": "https://github.com/BlocklyDuino/BlocklyDuinoElectron/issues"
     },
     "devDependencies": {
-        "electron": "^8.2.5",
-        "electron-builder": "^22.6.0"
+        "electron": "^8.3.0",
+        "electron-builder": "^22.6.1"
     },
     "dependencies": {
         "child_process": "^1.0.2",
         "electron-build-env": "^0.2.0",
         "electron-updater": "^4.3.1",
         "fs-extra": "^9.0.0",
-        "serialport": "^8.0.7"
+        "serialport": "^9.0.0",
+        "tableify": "^1.1.0"
     }
 }

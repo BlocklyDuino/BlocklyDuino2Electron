@@ -9,6 +9,7 @@
 const {ipcRenderer} = require('electron');
 const {exec} = require('child_process');
 const fs = require('fs-extra');
+const tableify = require('tableify')
 const SerialPort = require('serialport');
 
 var serialPortsMenu = document.getElementById('serialMenu');
@@ -19,10 +20,28 @@ serialPortsMenu.addEventListener("mouseover", function (event) {
         ports.forEach(function (port) {
             var option = document.createElement('option');
             option.value = port.path;
-            option.text = port.path + ' ' + port.manufacturer;
+            option.text = port.path;
             serialPortsMenu.appendChild(option);
         });
     });
+});
+
+document.getElementById('serialButton').addEventListener("mouseover", function (event) {
+    SerialPort.list().then(ports => {
+        let portsList = ports.map(function(obj) {
+            return {
+                path: obj.path,
+                manufacturer: obj.manufacturer,
+                vendorId: obj.vendorId,
+                productId: obj.productId
+            }
+        });
+        if (portsList.length === 0) {
+            document.getElementById('portListModalBody').innerHTML = "Aucun port n'est disponible";
+        } else {
+            document.getElementById('portListModalBody').innerHTML = tableify(portsList);
+        }
+    })
 });
 
 window.addEventListener('load', function load(event) {
