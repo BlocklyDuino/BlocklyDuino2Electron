@@ -1,4 +1,4 @@
-﻿// Modules to control application life and create native browser window
+// Modules to control application life and create native browser window
 const {
     app,
     BrowserWindow,
@@ -23,12 +23,12 @@ function createBlocklyWindow() {
         },
         icon: __dirname + '/src/icon.ico'
     });
-    if (process.platform === 'win32' && process.argv.length >= 2) {
-        BlocklyWindow.loadFile('./www/' + process.argv[1]);
-    } else {
-        BlocklyWindow.loadFile('./www/index.html');
-    };
-    BlocklyWindow.loadFile('./www/index.html');
+    // var url = '/www/index.html';
+    var url = '../../../www/index.html';
+    if (process.platform === 'win32' && process.argv.length >= 2) {    
+        url = url + process.argv[1];
+    }
+    BlocklyWindow.loadURL(`file://${__dirname}` + url);
     BlocklyWindow.setMenu(null);
     BlocklyWindow.on('closed', function () {
         BlocklyWindow = null;
@@ -46,10 +46,11 @@ function createSerialWindow(argLangChoice) {
         resizable: false,
         icon: __dirname + '/src/icon.ico'
     });
+    // var url = '/www/electron/serialMonitor.html';
+    var url = '../../../www/electron/serialMonitor.html';
     if (argLangChoice !== "" || argLangChoice !== "undefined")
-        SerialWindow.loadFile('./www/electron/serialMonitor.html?lang=' + argLangChoice);
-    else
-        SerialWindow.loadFile('./www/electron/serialMonitor.html');
+        url = url + '?lang=' + argLangChoice;
+    SerialWindow.loadURL(`file://${__dirname}` + url);
     SerialWindow.setMenu(null);
     SerialWindow.on('closed', function () {
         SerialWindow = null;
@@ -57,11 +58,12 @@ function createSerialWindow(argLangChoice) {
     // devtools = new BrowserWindow();
     // SerialWindow.webContents.setDevToolsWebContents(devtools.webContents);
     // SerialWindow.webContents.openDevTools({
-    // mode: 'detach'
+        // mode: 'detach'
     // });
+    console.log(url);
 };
 
-function createFactoryWindow() {
+function createFactoryWindow(argLangChoice) {
     FactoryWindow = new BrowserWindow({
         width: 1066,
         height: 640,
@@ -74,11 +76,15 @@ function createFactoryWindow() {
         frame: false,
         modal: false
     });
-    // FactoryWindow.loadFile('./www/blocksfactory/blocksfactory.html');
-    // FactoryWindow.setMenu(null);
-    // FactoryWindow.on('closed', function () {
-    // FactoryWindow = null;
-    // });
+    // var url = '/www/blocksfactory/blocksfactory.html';
+    var url = '../../../www/blocksfactory/blocksfactory.html';
+    if (argLangChoice !== "" || argLangChoice !== "undefined")
+        url = url + '?lang=' + argLangChoice;
+    SerialWindow.loadURL(`file://${__dirname}` + url);
+    FactoryWindow.setMenu(null);
+    FactoryWindow.on('closed', function () {
+        FactoryWindow = null;
+    });
 };
 
 function openDevTools(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
@@ -100,7 +106,8 @@ app.on('ready', () => {
     // BlocklyWindow.webContents.openDevTools({
         // mode: 'detach'
     // });
-    tray = new Tray('./www/blocklyduino/media/logo_only.png');
+    tray = new Tray('../../www/blocklyduino/media/logo_only.png');
+    // tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('BlocklyDuino');
 });
 
@@ -116,7 +123,6 @@ app.on('window-all-closed', function () {
 
 ipcMain.on("serialConnect", (event, argLangChoice) => {
     createSerialWindow(argLangChoice);
-    console.log('toto' + argLangChoice);
 });
 ipcMain.on("factory", function () {
     createFactoryWindow();

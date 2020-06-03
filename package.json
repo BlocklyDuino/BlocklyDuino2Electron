@@ -1,6 +1,6 @@
 {
     "name": "BlocklyDuino",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "BlocklyDuino is a web-based visual programming editor for [Arduino](http://www.arduino.cc/)",
     "license": "GPL-3.0",
     "author": "Sebastien Canet <scanet@libreduc.cc>",
@@ -91,6 +91,7 @@
         "electron-build-env": "^0.2.0",
         "electron-updater": "^4.3.1",
         "fs-extra": "^9.0.0",
+        "npm-check-updates": "^6.0.1",
         "serialport": "^9.0.0",
         "tableify": "^1.1.0"
     }
