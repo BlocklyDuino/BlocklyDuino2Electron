@@ -46,13 +46,14 @@ Install all required tools (as Administrator or sudo):
 
 ```bash
 > cd BlocklyDuinoElectron-master
-> electron .
+> npm install
+> npm start
 ```
 
 ### Build
 
 ```bash
-> npx electron-builder
+> npm run compile
 ```
 
 ## Links and thanks
