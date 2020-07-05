@@ -59,6 +59,39 @@ Install all required tools (as Administrator or sudo):
 > npm run compile
 ```
 
+## ChangeLog
+
+Check changelog [here](https://github.com/BlocklyDuino/BlocklyDuino2Electron/blob/master/CHANGELOG.txt)
+
+## Tools used
+
+[Ace editor](https://ace.c9.io)
+
+[Arduino-CLI](https://github.com/arduino/arduino-cli)
+
+[Electron](https://www.electronjs.org/)
+
+[Node SerialPort](https://serialport.io/)
+
+
+## Authors and Contributors
+
+Sébastien Canet ([scanet@libreduc.cc](scanet@libreduc.cc)).
+
+The BlocklyDuino2 project is also inspired by [Blockly@rduino](https://github.com/technologiescollege/Blockly-at-rduino), [ardublockly](https://github.com/carlosperate/ardublockly) and [Blocklino](https://github.com/fontainejp/blocklino).
+
+
+## License
+
+Copyright (C) 2020 Sébastien Canet scanet@libreduc.cc
+-   Licensed under the GNU General Public License v3.0.
+-   You may not use this project or any file except in compliance with the License.
+-   You may obtain a copy of the License at [https://opensource.org/licenses/GPL-3.0](https://opensource.org/licenses/GPL-3.0).
+
+Code from Blockly is licensed under the Apache 2.0 license.
+Code from STudio4Education is licensed under the BSD 3-Clause license.
+
+
 ## Links and thanks
 
 Tools without which nothing would have been possible (*and millions of thanks to their creators!*) :
