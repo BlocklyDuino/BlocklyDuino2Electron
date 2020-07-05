@@ -121,8 +121,7 @@ app.on('ready', () => {
     // BlocklyWindow.webContents.openDevTools({
         // mode: 'detach'
     // });
-    // tray = new Tray('./www/blocklyduino/media/logo_only.png');
-    tray = new Tray('../../../www/blocklyduino/media/logo_only.png');
+    tray = new Tray('./www/blocklyduino/media/logo_only.png');
     tray.setToolTip('blocklyduino');
 });
 
