@@ -1,6 +1,15 @@
-﻿/* Arduino CLI control
+﻿/**
+ * @license
+ * Copyright 2020 Sébastien CANET
+ * SPDX-License-Identifier: GPL-3.0
  */
-        const {ipcRenderer} = require('electron');
+
+/**
+ * @fileoverview Arduino CLI control.
+ * @author scanet@libreduc.cc (Sébastien CANET)
+ */
+ 
+const {ipcRenderer} = require('electron');
 const {exec} = require('child_process');
 const fs = require('fs-extra');
 

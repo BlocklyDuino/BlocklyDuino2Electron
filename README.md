@@ -1,28 +1,31 @@
+# ![enter image description here](https://raw.githubusercontent.com/BlocklyDuino/BlocklyDuino2Electron/master/src/app.png) BlocklyDuino2Electron
 
-# <img src="https://raw.githubusercontent.com/BlocklyDuino/BlocklyDuinoElectron/master/src/app.png" alt="BlockyDuino icon"> BlocklyDuino2Electron
-
-Electron version of BlocklyDuino2, autonomous client, multi OS with uploading integrated, this graphical environment is free and open source graphic language.
+Electron version of [BlocklyDuino2](https://github.com/BlocklyDuino/BlocklyDuino-v2), autonomous client, multi OS with uploading integrated. This graphical environment is a free and open source graphic language.
 
 Arduino programs are created by assembling blocks, thanks to drag'n'drop, then result is compiled and uploaded in the board.
 
-This app works just on Windows operating systems, but soon on Linux and MacOS. You can download it in [release section](https://github.com/BlocklyDuino/BlocklyDuinoElectron/releases).
+This app works just on Windows operating systems, but soon on Linux and MacOS. You can download it in [release section](https://github.com/BlocklyDuino/BlocklyDuino2Electron/releases).
 
 
-![BlocklyDuinoElectron Screenshot](https://github.com/BlocklyDuino/BlocklyDuinoElectron/blob/master/src/screencap.png)
+![BlocklyDuinoElectron Screenshot](https://raw.githubusercontent.com/BlocklyDuino/BlocklyDuino2Electron/master/src/screencap.png)
 
-## Demo
+## BlocklyDuino's Demo
 
 BlocklyDuino2 is a simple webware, you can give it a try [here.](https://blocklyduino.github.io/BlocklyDuino-v2/)
 
-You can download it [here](https://github.com/BlocklyDuino/BlocklyDuino-v2) and launch 'index.html'.
+You can download it [here](https://github.com/BlocklyDuino/BlocklyDuino-v2) and launch `index.html`.
 
 But for BlocklyDuino2Electron you have to download a version from  [releases](https://github.com/BlocklyDuino/BlocklyDuino2Electron/releases) and launch it from your computer.
+
+## Help and how-to
+
+Wiki available on Github: https://github.com/BlocklyDuino/BlocklyDuino2Electron/wiki
 
 **Ask for help** in the [forum](http://blockly.technologiescollege.fr/forum/).
 
 ## How to use by yourself
 
-Clone or [download the source code](https://github.com/BlocklyDuino/BlocklyDuinoElectron/archive/master.zip).
+Clone or [download the source code](https://github.com/BlocklyDuino/BlocklyDuino2Electron/archive/master.zip).
 
 ### Requirements
 
@@ -45,7 +48,7 @@ Install all required tools (as Administrator or sudo):
 ### Getting Started 
 
 ```bash
-> cd BlocklyDuinoElectron-master
+> cd BlocklyDuino2Electron-master
 > npm install
 > npm start
 ```
@@ -58,12 +61,13 @@ Install all required tools (as Administrator or sudo):
 
 ## Links and thanks
 
-Tools without which nothing would not have been possible :
+Tools without which nothing would have been possible (*and millions of thanks to their creators!*) :
 
-- [Blocklino](https://github.com/fontainejp/blocklino)
-- [Blockly@rduino](https://github.com/technologiescollege/Blockly-at-rduino)
-- [BlocklyDuino](https://github.com/BlocklyDuino/BlocklyDuino)
 - [Blockly](https://developers.google.com/blockly)
+- [BlocklyDuino](https://github.com/BlocklyDuino/BlocklyDuino)
+- [Blockly@rduino](https://github.com/technologiescollege/Blockly-at-rduino)
+- [Blocklino](https://github.com/fontainejp/blocklino)
+- [STudio4Education](https://github.com/A-S-T-U-C-E/STudio4Education)
 - [Font Awesome](http://fontawesome.io)
 - [Node.js](https://nodejs.org/fr/)
 - [electron](https://electronjs.org/)

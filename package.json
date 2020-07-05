@@ -1,9 +1,9 @@
 {
     "name": "BlocklyDuino",
-    "version": "0.3.0",
-    "description": "BlocklyDuino is a web-based visual programming editor for [Arduino](http://www.arduino.cc/)",
+    "version": "0.7.2",
+    "description": "BlocklyDuino is a web-based visual programming editor for [Arduino boards](http://www.arduino.cc/)",
     "license": "GPL-3.0",
-    "author": "Sebastien Canet <scanet@libreduc.cc>",
+    "author": "Sébastien Canet <scanet@libreduc.cc>",
     "main": "main.js",
     "keywords": [
         "blockly",
@@ -54,7 +54,7 @@
         },
         "extraFiles": [
             "compiler",
-            "sketchbook",
+            "libraries",
             "www",
             "README.md",
             "LICENSE.md",
@@ -71,9 +71,9 @@
     },
     "scripts": {
         "postinstall": "electron-builder install-app-deps",
+        "prepare": "electron-build-env npm rebuild",
         "start": "electron .",
-        "compiler": "electron-builder --win --ia32",
-        "prepare": "electron-build-env npm rebuild"
+        "compile": "electron-builder --win --ia32"
     },
     "repository": {
         "type": "git",
@@ -83,7 +83,7 @@
         "url": "https://github.com/BlocklyDuino/BlocklyDuinoElectron/issues"
     },
     "devDependencies": {
-        "electron": "^9.0.4",
+        "electron": "^9.0.5",
         "electron-builder": "^22.7.0"
     },
     "dependencies": {

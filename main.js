@@ -1,4 +1,14 @@
-// Modules to control application life and create native browser window
+/**
+ * @license
+ * Copyright 2020 Sébastien CANET
+ * SPDX-License-Identifier: GPL-3.0
+ */
+
+/**
+ * @fileoverview Modules to control application life and create native browser window.
+ * @author scanet@libreduc.cc (Sébastien CANET)
+ */
+ 
 const {
     app,
     BrowserWindow,
@@ -15,16 +25,17 @@ let devtools = null;
 let tray = null;
 
 function createBlocklyWindow() {
-    BlocklyWindow = new BrowserWindow({
+    let BlocklyWindow = new BrowserWindow({
         width: 1510,
         height: 700,
         webPreferences: {
             nodeIntegration: true
         },
-        icon: __dirname + '/src/icon.ico'
+        // icon: __dirname + '/www/blocklyduino/media/icon.ico'
+        icon: __dirname + '../../../www/blocklyduino/media/icon.ico'
     });
-    var url = '/www/index.html';
-    // var url = '../../../www/index.html';
+    // var url = '/www/index.html';
+    var url = '../../../www/index.html';
     if (process.platform === 'win32' && process.argv.length >= 2) {    
         url = url + process.argv[1];
     }
@@ -44,7 +55,8 @@ function createSerialWindow(argLangChoice) {
             nodeIntegration: true
         },
         resizable: false,
-        icon: __dirname + '/src/icon.ico'
+        // icon: __dirname + '/src/icon.ico'
+        icon: __dirname + '../../../www/blocklyduino/media/icon.ico'
     });
     // var url = '/www/electron/serialMonitor.html';
     var url = '../../../www/electron/serialMonitor.html';
@@ -60,7 +72,6 @@ function createSerialWindow(argLangChoice) {
     // SerialWindow.webContents.openDevTools({
         // mode: 'detach'
     // });
-    console.log(url);
 };
 
 function createFactoryWindow(argLangChoice) {
@@ -69,13 +80,14 @@ function createFactoryWindow(argLangChoice) {
         height: 640,
         'parent': BlocklyWindow,
         webPreferences: {
-            nodeIntegration: true,
-            nodeIntegrationInWorker: true
+            nodeIntegration: true
         },
         resizable: true,
         movable: true,
         frame: false,
-        modal: false
+        modal: false,
+        // icon: __dirname + '/www/blocklyduino/media/icon.ico'
+        icon: __dirname + '../../../www/blocklyduino/media/icon.ico'
     });
     // var url = '/www/blocksfactory/blocksfactory.html';
     var url = '../../../www/blocksfactory/blocksfactory.html';
@@ -97,21 +109,21 @@ function openDevTools(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
 function refresh(BlocklyWindow = BrowserWindow.getFocusedWindow()) {
     BlocklyWindow.webContents.reloadIgnoringCache();
 };
-
 //need to be deleted at next serialport upgrad > 9.0.0
 app.allowRendererProcessReuse = false;
+
 app.on('ready', () => {
     createBlocklyWindow();
     globalShortcut.register('F12', openDevTools);
     globalShortcut.register('F5', refresh);
-    devtools = new BrowserWindow();
-    BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
-    BlocklyWindow.webContents.openDevTools({
-        mode: 'detach'
-    });
-    // tray = new Tray('../../www/blocklyduino/media/logo_only.png');
-    tray = new Tray('./www/blocklyduino/media/logo_only.png');
-    tray.setToolTip('BlocklyDuino');
+    // devtools = new BrowserWindow();
+    // BlocklyWindow.webContents.setDevToolsWebContents(devtools.webContents);
+    // BlocklyWindow.webContents.openDevTools({
+        // mode: 'detach'
+    // });
+    // tray = new Tray('./www/blocklyduino/media/logo_only.png');
+    tray = new Tray('../../../www/blocklyduino/media/logo_only.png');
+    tray.setToolTip('blocklyduino');
 });
 
 app.on('activate', function () {

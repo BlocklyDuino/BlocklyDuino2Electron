@@ -1,9 +1,18 @@
-﻿/* fake IDE code Arduino
- ** boardMenu: Arduino boards list
- ** serialMenu: serial port list
- ** serialConnectButton: open modal with serial console
- ** verifyButton: verify and compile in hex file
- ** uploadButton: upload hex file in Arduino board
+﻿/**
+ * @license
+ * Copyright 2020 Sébastien CANET
+ * SPDX-License-Identifier: GPL-3.0
+ */
+
+/**
+ * @fileoverview Utility functions for handling typed variables.
+ * fake IDE code Arduino
+ * boardMenu: Arduino boards list
+ * serialMenu: serial port list
+ * serialConnectButton: open modal with serial console
+ * verifyButton: verify and compile in hex file
+ * uploadButton: upload hex file in Arduino board
+ * @author scanet@libreduc.cc (Sébastien CANET)
  */
 
 const {ipcRenderer} = require('electron');
@@ -58,7 +67,7 @@ window.addEventListener('load', function load(event) {
         }
         var file_path = '.\\tmp';
         var file = '.\\compiler\\tmp\\tmp.ino';
-        var data = document.getElementById('code_peek_content').innerText;
+        var data = document.getElementsByClassName("ace_content")[0].innerText;
         var boardSelected = document.getElementById('boardMenu').value;
         if (boardSelected !== "none" && boardSelected !== "" && boardSelected !== "undefined") {
             document.getElementById('content_serial').style.color = '#FFFFFF';

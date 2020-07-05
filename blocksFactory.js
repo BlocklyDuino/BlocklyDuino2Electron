@@ -1,4 +1,16 @@
-﻿var remote = require('electron').remote;
+﻿/**
+* @license
+* Copyright 2020 Sébastien CANET
+* SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
+/**
+ * @fileoverview Helper functions for blocks factory management.
+ * @author gasolin@gmail.com (Fred Lin)
+ * @author scanet@libreduc.cc (Sébastien CANET)
+ */
+
+var remote = require('electron').remote;
 var {ipcRenderer} = require("electron");
 var fs = require('fs');
 
