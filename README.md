@@ -78,7 +78,7 @@ Check changelog [here](https://github.com/BlocklyDuino/BlocklyDuino2Electron/blo
 
 Sébastien Canet ([scanet@libreduc.cc](scanet@libreduc.cc)).
 
-The BlocklyDuino2 project is also inspired by [Blockly@rduino](https://github.com/technologiescollege/Blockly-at-rduino), [ardublockly](https://github.com/carlosperate/ardublockly) and [Blocklino](https://github.com/fontainejp/blocklino).
+The BlocklyDuino2 project is also inspired by [Blockly@rduino](https://github.com/technologiescollege/Blockly-at-rduino), [ardublockly](https://github.com/carlosperate/ardublockly), [Blocklino](https://github.com/fontainejp/blocklino) and [STudio4Education](https://github.com/A-S-T-U-C-E/S4E_Electron).
 
 
 ## License
@@ -91,8 +91,28 @@ Copyright (C) 2020 Sébastien Canet scanet@libreduc.cc
 Code from Blockly is licensed under the Apache 2.0 license.
 Code from STudio4Education is licensed under the BSD 3-Clause license.
 
+# arduino-cli
 
-## Links and thanks
+![cli-logo](https://raw.githubusercontent.com/arduino/arduino-cli/master/docs/img/CLI_Logo_small.png)
+
+Arduino CLI is an all-in-one solution that provides builder, boards/library manager,
+uploader, discovery and many other tools needed to use any Arduino compatible
+board and platforms.
+
+[![tests-badge]](https://github.com/Arduino/arduino-cli/actions?workflow=test)
+[![nightly-badge]](https://github.com/Arduino/arduino-cli/actions?workflow=nightly)
+[![docs-badge]](https://github.com/Arduino/arduino-cli/actions?workflow=docs)
+[![codecov-badge]](https://codecov.io/gh/arduino/arduino-cli)
+
+> **Note:** this software is currently under active development: anything can change
+  at any time, API and UI must be considered unstable until we release version 1.0.0.
+
+## Docs
+
+For guidance on installation and development, see the [User documentation](https://arduino.github.io/arduino-cli/latest/).
+
+
+# Links and thanks
 
 Tools without which nothing would have been possible (*and millions of thanks to their creators!*) :
 

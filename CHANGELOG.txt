@@ -1,0 +1,5 @@
+v0.7.3, 2020-07-06
+- change prompt to custom-dialog from Blockly, Electron compatible
+- bug fix on all reset button
+- bug fix on all new/open/save
+- bug fix on fullscreen button

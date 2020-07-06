@@ -1,6 +1,6 @@
 {
     "name": "BlocklyDuino",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "description": "BlocklyDuino is a web-based visual programming editor for [Arduino boards](http://www.arduino.cc/)",
     "license": "GPL-3.0",
     "author": "Sébastien Canet <scanet@libreduc.cc>",
