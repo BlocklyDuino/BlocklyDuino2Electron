@@ -1,6 +1,6 @@
 {
     "name": "BlocklyDuino",
-    "version": "0.7.3",
+    "version": "0.8.0",
     "description": "BlocklyDuino is a web-based visual programming editor for [Arduino boards](http://www.arduino.cc/)",
     "license": "GPL-3.0",
     "author": "Sébastien Canet <scanet@libreduc.cc>",
@@ -35,7 +35,12 @@
                 "portable",
                 "zip"
             ],
-            "icon": "src/appIcon.png"
+            "icon": "src/appIcon.png",
+            "files": [
+                "!v0.*/*",
+                "!nbproject/*",
+                "!.github/*"
+            ]
         },
         "nsis": {
             "installerIcon": "src/install.ico",
@@ -54,11 +59,13 @@
         },
         "extraFiles": [
             "compiler",
-            "libraries",
+            "documentation",
+            "nodejs",
+            "sketchbook",
             "www",
+            "CHANGELOG.txt",
             "README.md",
-            "LICENSE.md",
-            "config.json"
+            "LICENSE"
         ],
         "publish": [
             {
@@ -83,16 +90,16 @@
         "url": "https://github.com/BlocklyDuino/BlocklyDuinoElectron/issues"
     },
     "devDependencies": {
-        "electron": "^9.2.1",
-        "electron-builder": "^22.8.0"
+        "electron": "^10.1.5",
+        "electron-builder": "^22.9.1"
     },
     "dependencies": {
         "child_process": "^1.0.2",
         "electron-build-env": "^0.2.0",
-        "electron-updater": "^4.3.4",
+        "electron-updater": "^4.3.5",
         "fs-extra": "^9.0.1",
-        "npm-check-updates": "^7.1.1",
-        "serialport": "^9.0.1",
+        "npm-check-updates": "^10.0.0",
+        "serialport": "^9.0.2",
         "tableify": "^1.1.0"
     }
 }

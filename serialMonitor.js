@@ -1,19 +1,19 @@
 /**
-* @license
-* Copyright 2012 Fred Lin
-* SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ * @license
+ * Copyright 2020 Sébastien CANET
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 /**
  * @fileoverview Utility functions for handling serial communication & plotter.
  * @author scanet@libreduc.cc (Sébastien CANET)
  */
  
-var {ipcRenderer} = require("electron");
-var {dialog} = require("electron").remote;
+var {ipcRenderer, dialog} = require("electron");
 var fs = require('fs-extra');
 
 window.addEventListener('load', function load(event) {
+    var serialConnected = false;
     // prepare serial window
     var serialConnectSpeedMenu = document.getElementById('serialConnectSpeed_Menu');
     var serialConnectSpeedAvailable = JSON.parse(localStorage.getItem("availableSpeed"));
@@ -23,7 +23,6 @@ window.addEventListener('load', function load(event) {
         option.text = serialConnectSpeedAvailable;
         serialConnectSpeedMenu.appendChild(option);
     });
-    var connexion = false;
     var graph = false;
     document.getElementById('btn_serialSend').disabled = true;
     document.getElementById('btn_serialPeekClear').onclick = function () {
@@ -42,29 +41,20 @@ window.addEventListener('load', function load(event) {
         const Readline = require('@serialport/parser-readline');
         var baud = parseInt(document.getElementById('serialConnectSpeed_Menu').value);
         var comPortToUse = localStorage.getItem("comPort");
-        if (connexion) {
-            document.getElementById('btn_serialConnect').innerHTML = MSG['serial_btn_start'];
-            document.getElementById('btn_serialSend').disabled = true;
-            SerialPortToMonitor.close(function (err) {
-                document.getElementById('serialPeek').innerHTML += MSG['serial_info_stop'];
-            });
-            connexion = false;
-            smoothieChart.stop();
-        } else {
-            let SerialPortToMonitor = new SerialPort(comPortToUse, {
-                autoOpen: false,
-                parser: SerialPort.parsers.readline('\n'),
-                baudRate: baud
-            });
-            // const parser = new Readline({
-                // delimiter: '\n'
-            // });
-            SerialPortToMonitor.pipe(parser);
+        let SerialPortToMonitor = new SerialPort(comPortToUse, {
+            autoOpen: false,
+            baudRate: baud
+        });
+        var parser = SerialPortToMonitor.pipe(new Readline({ delimiter: '\n' }))
+        if (!serialConnected) {
             document.getElementById('btn_serialConnect').innerHTML = MSG['serial_btn_stop'];
             document.getElementById('btn_serialSend').disabled = false;
-            SerialPortToMonitor.on('open', function () {
-                document.getElementById('serialPeek').innerHTML += MSG['serial_info_start'];
-                parser.on('data', function (data) {
+            SerialPortToMonitor.open(function (err) {
+                document.getElementById('serialPeek').innerHTML += MSG['serial_info_start']
+                });
+            serialConnected = true;
+            parser.on('data', function (data) {
+				if (serialConnected){
                     document.getElementById('serialSendBox').value = parseInt(data, 10);
                     smoothieChart.start();
                     document.getElementById('serialPeek').innerHTML += data + "<br>";
@@ -72,35 +62,36 @@ window.addEventListener('load', function load(event) {
                     document.getElementById('serialPeek').animate({
                         scrollTop: document.getElementById('serialPeek').scrollHeight
                     });
-                });
+                }
             });
-            connexion = true;
             smoothieChart.start();
+        } else {
+            document.getElementById('btn_serialConnect').innerHTML = MSG['serial_btn_start'];
+            document.getElementById('btn_serialSend').disabled = true;
+            SerialPortToMonitor.close(function (err) {
+                document.getElementById('serialPeek').innerHTML += MSG['serial_info_stop'];
+            });
+            serialConnected = false;
+            smoothieChart.stop();
         }
     };
-    document.getElementById('btn_serialPeekCSV').onclick = function () {
-        dialog.showSaveDialog(window, {
-            title: MSG['serial_CSV'],
-            defaultPath: 'Programme',
-            filters: [{
-                    name: 'data',
-                    extensions: ['csv']
-                }
-            ]
-        },
-        function (result) {
-            var code = document.getElementById('fenetre_term').innerHTML
-            code = code.split('<br>').join('\n')
-            if (result === null) {
-                return
-            } else {
-                fs.writeFile(result, code, function (err) {
-                    if (err)
-                        return console.log(err)
-                })
-            }
-        })
-    };
+	document.getElementById('btn_serialPeekCSV').onclick = function(event) {
+		ipcRenderer.send('save-csv');
+		var code = document.getElementById('serialPeek').innerHTML;
+		code = code.split('<br>');
+        fs.writeFile('./toto.csv', code);
+	}
+	ipcRenderer.on('saved-csv', function(event, savePath){
+		var code = document.getElementById('serialPeek').innerHTML;
+		code = code.split('<br>').join('\n');
+		if (savePath === null) {
+			return;
+		} else {
+			fs.writeFile(savePath, code, function(err){
+				if (err) return console.log(err);
+			})
+		}
+	})
     document.getElementById('btn_serialChart').onclick = function () {
         if (!graph) {
             document.getElementById('serialPeek').style.width = "120px";

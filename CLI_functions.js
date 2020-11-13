@@ -57,15 +57,16 @@ window.addEventListener('load', function load(event) {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
                 document.getElementById('content_serial').innerHTML = stderr;
+                document.getElementById('content_serial').scrollTop = stderr.offsetHeight + stderr.offsetTop;
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
             document.getElementById('content_serial').innerHTML = stdout;
+            document.getElementById('content_serial').scrollTop = stdout.offsetHeight + stdout.offsetTop;
         });
     };
     document.getElementById('installBoardsButton').onclick = function (event) {
-        var inputVal = document.getElementById("installBoardsInput").value;
-        var cmd = 'arduino-cli.exe core install ' + inputVal;
+        var cmd = 'arduino-cli.exe core install "' + document.getElementById("installBoardsInput").value + '"';
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['installBoardsButton_msg'];
         exec(cmd, {
@@ -74,15 +75,16 @@ window.addEventListener('load', function load(event) {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
                 document.getElementById('content_serial').innerHTML = stderr;
+                document.getElementById('content_serial').scrollTop = stderr.offsetHeight + stderr.offsetTop;
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
             document.getElementById('content_serial').innerHTML = stdout;
+            document.getElementById('content_serial').scrollTop = stdout.offsetHeight + stdout.offsetTop;
         });
     };
     document.getElementById('searchlLibButton').onclick = function (event) {
-        var inputVal = document.getElementById("searchlLibInput").value;
-        var cmd = 'arduino-cli.exe lib search ' + inputVal;
+        var cmd = 'arduino-cli.exe lib search "' + document.getElementById("searchlLibInput").value + '"';
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['searchlLibButton_msg'];
         exec(cmd, {
@@ -91,15 +93,16 @@ window.addEventListener('load', function load(event) {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
                 document.getElementById('content_serial').innerHTML = stderr;
+                document.getElementById('content_serial').scrollTop = stderr.offsetHeight + stderr.offsetTop;
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
             document.getElementById('content_serial').innerHTML = stdout;
+            document.getElementById('content_serial').scrollTop = stdout.offsetHeight + stdout.offsetTop;
         });
     };
     document.getElementById('installLibButton').onclick = function (event) {
-        var inputVal = document.getElementById("installLibInput").value;
-        var cmd = 'arduino-cli.exe lib install ' + inputVal;
+        var cmd = 'arduino-cli.exe lib install "' + document.getElementById("installLibInput").value + '"';
         document.getElementById('content_serial').style.color = '#00FF00';
         document.getElementById('content_serial').innerHTML = MSG['installLibButton_msg'];
         exec(cmd, {
@@ -108,13 +111,15 @@ window.addEventListener('load', function load(event) {
             if (error) {
                 document.getElementById('content_serial').style.color = '#FF0000';
                 document.getElementById('content_serial').innerHTML = stderr;
+                document.getElementById('content_serial').scrollTop = stderr.offsetHeight + stderr.offsetTop;
                 return;
             }
             document.getElementById('content_serial').style.color = '#00FF00';
             document.getElementById('content_serial').innerHTML = stdout;
+            document.getElementById('content_serial').scrollTop = stdout.offsetHeight + stdout.offsetTop;
             //error sent without 'error' in function, need to double instruction
-            document.getElementById('content_serial').style.color = '#FF0000';
-            document.getElementById('content_serial').innerHTML += stderr;
+            // document.getElementById('content_serial').style.color = '#FF0000';
+            // document.getElementById('content_serial').innerHTML += stderr;
         });
     };
 });
