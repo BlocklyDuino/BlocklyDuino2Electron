@@ -100,6 +100,6 @@
         "fs-extra": "^9.1.0",
         "npm-check-updates": "^11.3.0",
         "serialport": "^9.0.7",
-        "tableify": "^1.1.0"
+        "tableify": "^1.1.1"
     }
 }
