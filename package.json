@@ -91,7 +91,7 @@
     },
     "devDependencies": {
         "electron": "^39.8.10",
-        "electron-builder": "^24.13.3"
+        "electron-builder": "^26.15.3"
     },
     "dependencies": {
         "child_process": "^1.0.2",
