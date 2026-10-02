@@ -90,7 +90,7 @@
         "url": "https://github.com/BlocklyDuino/BlocklyDuinoElectron/issues"
     },
     "devDependencies": {
-        "electron": "^39.8.10",
+        "electron": "^41.10.6",
         "electron-builder": "^24.13.3"
     },
     "dependencies": {
